@@ -27,7 +27,7 @@
     private void InitializeComponent()
     {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.m_richTextContentsBox = new System.Windows.Forms.RichTextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fIleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,14 +55,14 @@
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBox1.Location = new System.Drawing.Point(0, 24);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(821, 649);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "";
+            this.m_richTextContentsBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.m_richTextContentsBox.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.m_richTextContentsBox.Location = new System.Drawing.Point(0, 24);
+            this.m_richTextContentsBox.Name = "richTextBox1";
+            this.m_richTextContentsBox.ReadOnly = true;
+            this.m_richTextContentsBox.Size = new System.Drawing.Size(821, 649);
+            this.m_richTextContentsBox.TabIndex = 0;
+            this.m_richTextContentsBox.Text = "";
             // 
             // menuStrip1
             // 
@@ -241,7 +241,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(821, 673);
-            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.m_richTextContentsBox);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
@@ -257,7 +257,7 @@
 
     #endregion
 
-    private System.Windows.Forms.RichTextBox richTextBox1;
+    private System.Windows.Forms.RichTextBox m_richTextContentsBox;
     private System.Windows.Forms.MenuStrip menuStrip1;
     private System.Windows.Forms.ToolStripMenuItem fIleToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;

@@ -12,12 +12,39 @@ using System.IO;
 
 public partial class MainWindow : Form
 {
+    /// <summary>
+    /// if true, we will se ethe rtf code included with the real text
+    /// </summary>
     bool m_viewRTF = false;
+
+    /// <summary>
+    /// path to the file we want to read
+    /// </summary>
     string m_filePath;
+
+    /// <summary>
+    /// Path where we save the options
+    /// </summary>
     string m_optionsPath = "LogTypes.xml";
-    
+
+    /// <summary>
+    /// Used to save teh 
+    /// </summary>
+    //int m_lastKnownCaretPosition = -1;
+
+    /// <summary>
+    /// The current options
+    /// </summary>
     LogOptions m_logOptions;    
+
+    /// <summary>
+    /// The last thing we searched
+    /// </summary>
     SearchRequest m_lastSearchRequest;    
+
+    /// <summary>
+    /// The different file controllers
+    /// </summary>
     Dictionary<string, FileController> m_fileControllers = new Dictionary<string, FileController>();
 
     public MainWindow()
@@ -32,7 +59,7 @@ public partial class MainWindow : Form
         m_logOptions.Load(m_optionsPath);
     }
 
-    private void LoadFile( string in_path)
+    private void LoadFile( string in_path, int in_position)
     {
         if( File.Exists(in_path))
         {
@@ -51,14 +78,20 @@ public partial class MainWindow : Form
             }
 
             m_fileControllers[in_path].OpenFile(m_logOptions.Clone() as LogOptions);
+
+            // @todo: the position thingie
+            //m_richTextContentsBox.SelectionStart = in_position;
+            //m_richTextContentsBox.ScrollToCaret();
         }
     }       
 
-    private void Reloadfile()
+    private void ReloadFile()
     {        
         if(!string.IsNullOrEmpty(m_filePath))
         {
-            LoadFile(m_filePath);            
+            //m_lastKnownCaretPosition = m_richTextContentsBox.SelectionStart;
+
+            LoadFile(m_filePath, m_richTextContentsBox.SelectionStart);
         }
     }
 
@@ -91,12 +124,12 @@ public partial class MainWindow : Form
             // @todo: later one day?
         }
 
-        int idx = richTextBox1.Find(in_search.searchText, richTextBox1.SelectionStart + richTextBox1.SelectionLength, searchFlags);
+        int idx = m_richTextContentsBox.Find(in_search.searchText, m_richTextContentsBox.SelectionStart + m_richTextContentsBox.SelectionLength, searchFlags);
 
         if (idx != -1)
         {
-            richTextBox1.SelectionStart = idx;
-            richTextBox1.ScrollToCaret();
+            m_richTextContentsBox.SelectionStart = idx;
+            m_richTextContentsBox.ScrollToCaret();
             m_lastSearchRequest = in_search;
         }
     }
@@ -114,13 +147,13 @@ public partial class MainWindow : Form
     private void OpenLogFileDialog_FileOk(object sender, CancelEventArgs e)
     {
         m_filePath = openLogFileDialog.FileName;
-        LoadFile(m_filePath);
+        LoadFile(m_filePath, 0);
     }
 
     private void OpenOptionsFileDialog_FileOk(object sender, CancelEventArgs e)
     {
         m_logOptions.Load(openOptionsFileDialog.FileName);
-        Reloadfile();        
+        ReloadFile();        
     }
 
     private void SaveOptionsFileDialog_FileOk(object sender, CancelEventArgs e)
@@ -158,7 +191,7 @@ public partial class MainWindow : Form
     
     private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        Reloadfile();        
+        ReloadFile();        
     }
 
     private void findToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -179,7 +212,7 @@ public partial class MainWindow : Form
     private void toggleRTFToolStripMenuItem_Click(object sender, EventArgs e)
     {
         m_viewRTF = !m_viewRTF;
-        Reloadfile();
+        ReloadFile();
     }
 
     private void logOptionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -191,7 +224,7 @@ public partial class MainWindow : Form
 
     private void OptionsDialog_FormClosed(object sender, FormClosedEventArgs e)
     {
-        Reloadfile();
+        ReloadFile();
     }
 
     private void OnLinesRead(LinesReadResult res)
@@ -199,18 +232,18 @@ public partial class MainWindow : Form
         if (m_viewRTF)
         {
             // If we want to view the rtf we save it as normal text
-            richTextBox1.Rtf = "";
-            richTextBox1.Text = res.newText;
-            richTextBox1.SelectionStart = richTextBox1.Text.Length;
+            m_richTextContentsBox.Rtf = "";
+            m_richTextContentsBox.Text = res.newText;
+            m_richTextContentsBox.SelectionStart = m_richTextContentsBox.Text.Length;
         }
         else
         {
-            richTextBox1.Text = "";
-            richTextBox1.Rtf = res.newText;
-            richTextBox1.SelectionStart = richTextBox1.Rtf.Length;
+            m_richTextContentsBox.Text = "";
+            m_richTextContentsBox.Rtf = res.newText;
+            m_richTextContentsBox.SelectionStart = m_richTextContentsBox.Rtf.Length;
         }
         
-        richTextBox1.ScrollToCaret();
+        m_richTextContentsBox.ScrollToCaret();
 
         for (int i = 0; i < res.newLogTypesFound.Length; ++i)
         {
