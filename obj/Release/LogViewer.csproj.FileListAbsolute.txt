@@ -1,0 +1,12 @@
+Z:\Projects\LogViewer\LogViewer\bin\Release\LogViewer.exe.config
+Z:\Projects\LogViewer\LogViewer\bin\Release\LogViewer.exe
+Z:\Projects\LogViewer\LogViewer\bin\Release\LogViewer.pdb
+Z:\Projects\LogViewer\LogViewer\obj\Release\LogViewer.csproj.AssemblyReference.cache
+Z:\Projects\LogViewer\LogViewer\obj\Release\MainWindow.resources
+Z:\Projects\LogViewer\LogViewer\obj\Release\OptionsDialog.resources
+Z:\Projects\LogViewer\LogViewer\obj\Release\LogViewer.Properties.Resources.resources
+Z:\Projects\LogViewer\LogViewer\obj\Release\SearchDialog.resources
+Z:\Projects\LogViewer\LogViewer\obj\Release\LogViewer.csproj.GenerateResource.cache
+Z:\Projects\LogViewer\LogViewer\obj\Release\LogViewer.csproj.CoreCompileInputs.cache
+Z:\Projects\LogViewer\LogViewer\obj\Release\LogViewer.exe
+Z:\Projects\LogViewer\LogViewer\obj\Release\LogViewer.pdb
