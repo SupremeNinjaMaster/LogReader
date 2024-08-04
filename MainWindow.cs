@@ -40,12 +40,12 @@ public partial class MainWindow : Form
     /// <summary>
     /// The last thing we searched
     /// </summary>
-    SearchRequest m_lastSearchRequest;    
+    SearchRequest m_lastSearchRequest;
 
     /// <summary>
-    /// The different file controllers
+    /// A file controller that runs a buffer on a separate thread
     /// </summary>
-    Dictionary<string, FileController> m_fileControllers = new Dictionary<string, FileController>();
+    FileController m_fileController;
 
     public MainWindow()
     {
@@ -57,6 +57,9 @@ public partial class MainWindow : Form
 
         m_logOptions = new LogOptions();
         m_logOptions.Load(m_optionsPath);
+
+        m_richTextContentsBox.MouseUp += RichTextContentsBox_MouseUp;
+        
     }
 
     private void LoadFile( string in_path, int in_position)
@@ -64,20 +67,24 @@ public partial class MainWindow : Form
         if( File.Exists(in_path))
         {
             m_logOptions.Load("LogTypes.xml");
-            if ( !m_fileControllers.ContainsKey(in_path))
-            {
-                // If there is no file controller, it means this is a new file request, so close all others
-                while( m_fileControllers.Count > 0 )
-                {
-                    m_fileControllers.First().Value.Stop();
-                    m_fileControllers.Remove(m_fileControllers.First().Key);
-                }
 
-                m_fileControllers.Add(in_path, new FileController(in_path));
-                m_fileControllers[in_path].onLinesReadDelegate += OnLinesRead;
+            if( m_fileController != null)
+            {
+                // If we are loading a different file, we stop the old one
+                if (m_fileController.path != in_path)
+                {
+                    m_fileController.Stop();
+                    m_fileController = null;
+                }
             }
 
-            m_fileControllers[in_path].OpenFile(m_logOptions.Clone() as LogOptions);
+            if (m_fileController == null)
+            {
+                m_fileController = new FileController(in_path);
+                m_fileController.onLinesReadDelegate += OnLinesRead;
+            }
+
+            m_fileController.OpenFile(m_logOptions.Clone() as LogOptions);
 
             // @todo: the position thingie
             //m_richTextContentsBox.SelectionStart = in_position;
@@ -269,6 +276,19 @@ public partial class MainWindow : Form
     private void importLogOptionsToolStripMenuItem_Click(object sender, EventArgs e)
     {
         openOptionsFileDialog.ShowDialog();
+    }
+
+    private void clearLogsToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        m_fileController.ClearLog();
+    }
+
+    private void RichTextContentsBox_MouseUp(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Right)
+        {
+            contextMenuStrip1.Show(Cursor.Position);
+        }
     }
 }
 

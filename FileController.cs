@@ -21,6 +21,17 @@ public class FileController
     DataBuffer m_buffer;
     LogOptions m_options;
     bool m_shouldReload = false;
+
+    /// <summary>
+    /// The index from which we need to start creating text from the buffer
+    /// </summary>
+    private int m_startLineIndex = 0;
+
+    private int m_maxLinesRead = 0;
+
+    /// <summary>
+    /// Delegate invoked in the main thread when we are done reading lines
+    /// </summary>
     OnLinesReadDelegate m_onLinesReadDelegate;
 
     public FileController(string in_path)
@@ -30,9 +41,11 @@ public class FileController
 
     public void OpenFile(LogOptions in_options)
     {
+        m_options = in_options;
+
         if (m_buffer == null)
         {            
-            m_buffer = new DataBuffer(path, in_options);
+            m_buffer = new DataBuffer(path, in_options, m_startLineIndex);
             m_worker = new BackgroundWorker();
             m_worker.WorkerReportsProgress = true;
             m_worker.DoWork += new DoWorkEventHandler(DoWork);
@@ -41,8 +54,7 @@ public class FileController
             m_worker.RunWorkerAsync(m_buffer);
         }
         else
-        {
-            m_options = in_options;
+        {            
             m_shouldReload = true;
             m_buffer.Stop();
         }
@@ -50,12 +62,20 @@ public class FileController
 
     public void Stop()
     {
-        m_onLinesReadDelegate = null;
+        //m_onLinesReadDelegate = null;
 
         if (m_worker != null && m_worker.IsBusy && m_buffer != null)
         {
             m_buffer.Stop();
-        }        
+        } 
+    }
+
+    public void ClearLog()
+    {
+        // Save atomically the start line index so we can reload from that start index
+        Interlocked.Exchange(ref m_startLineIndex, m_maxLinesRead);
+        m_shouldReload = true;
+        Stop();
     }
 
     /// <summary>
@@ -68,25 +88,32 @@ public class FileController
         // This is done in the background thread
         BackgroundWorker worker = (BackgroundWorker)(sender);
         DataBuffer buffer = (DataBuffer)(e.Argument);
-
+         
         while (!buffer.ShouldStop())
         {
             int linesRead = buffer.Read();
 
             if (linesRead > 0)
             {
-                buffer.CreateText();
+                bool hasTextChanged;
+                buffer.CreateText(out hasTextChanged);
 
-                // Send the results to the main thread
-                LinesReadResult res = new LinesReadResult();
-                res.newText = buffer.text;
-                res.newLogTypesFound = buffer.logTypes;
-                worker.ReportProgress(100, res);
+                if (hasTextChanged)
+                {
+                    // Send the results to the main thread but only if the resulting text has changed
+                    LinesReadResult res = new LinesReadResult();
+                    res.newText = buffer.text;
+                    res.newLogTypesFound = buffer.logTypes;
+                    worker.ReportProgress(100, res);
+                }
             }
             else
             {
                 Thread.Sleep(1000);
             }
+
+            // Save the max lines read into the main thread counter
+            Interlocked.Exchange(ref m_maxLinesRead, buffer.maxLinesRead);
         }
     }
 

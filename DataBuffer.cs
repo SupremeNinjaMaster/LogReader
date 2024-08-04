@@ -67,14 +67,19 @@ public class DataBuffer
     public readonly string path;
     private long m_shouldStop = 0;
     private long m_lastByteRead = 0;
-    private long m_shouldReload = 0;
 
-    public DataBuffer(string in_path, LogOptions in_options)
+    /// <summary>
+    /// We only start creating text starting from this index
+    /// </summary>
+    private readonly int m_lineStart = 0;
+
+    public DataBuffer(string in_path, LogOptions in_options, int in_lineStart)
     {
         path = in_path;        
         m_lines = new List<LogLine>();
         m_logTypes = new HashSet<string>();
         m_logOptions = in_options;
+        m_lineStart = in_lineStart;
     }
 
     /// <summary>
@@ -83,11 +88,6 @@ public class DataBuffer
     public int Read()
     {
         int linesRead = 0;
-
-        if(Interlocked.Read(ref m_shouldReload) > 0L)
-        {
-            m_lastByteRead = 0;
-        }
 
         if (new FileInfo(path).Length > m_lastByteRead)
         {
@@ -168,11 +168,12 @@ public class DataBuffer
         
         return new LogLine(in_index, "", "", in_str, EVerbosity.Log);
     }
-
+        
     /// <summary>
     /// Creates RTF text from the entire file read
     /// </summary>
-    public void CreateText()
+    /// <param name="out_hasTextChanged"></param>
+    public void CreateText(out bool out_hasTextChanged)
     {        
         Dictionary<int, string> colorCodeHashMap = new Dictionary<int, string>();
         StringBuilder builder = new StringBuilder();
@@ -197,11 +198,11 @@ public class DataBuffer
 
         // paragraph start, font type, font size
         builder.AppendLine(@"\pard\f0\fs18");
-
+       
         string maxLineCount = m_lines.Count.ToString();
         int padding = maxLineCount.Length;
 
-        for ( int i = 0, max = m_lines.Count; i< max; ++i)
+        for ( int i = m_lineStart, max = m_lines.Count; i< max; ++i)
         {
             if (m_logOptions.CanShow(m_lines[i].logType, m_lines[i].verbosity))
             {
@@ -224,8 +225,13 @@ public class DataBuffer
         }
 
         builder.Append("}");
-
-        m_text = builder.ToString();
+                
+        string newText = builder.ToString();
+        out_hasTextChanged = newText != m_text;
+        if (out_hasTextChanged)
+        {
+            m_text = builder.ToString();
+        }
     }
     
     public string text
@@ -241,6 +247,14 @@ public class DataBuffer
         get
         {
             return m_logTypes.ToArray();
+        }
+    }
+
+    public int maxLinesRead
+    {
+        get
+        {
+            return m_lines.Count;
         }
     }
 }

@@ -26,6 +26,7 @@
     /// </summary>
     private void InitializeComponent()
     {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.m_richTextContentsBox = new System.Windows.Forms.RichTextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -50,15 +51,18 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openOptionsFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveOptionsFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.clearLogsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // richTextBox1
+            // m_richTextContentsBox
             // 
             this.m_richTextContentsBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_richTextContentsBox.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.m_richTextContentsBox.Location = new System.Drawing.Point(0, 24);
-            this.m_richTextContentsBox.Name = "richTextBox1";
+            this.m_richTextContentsBox.Name = "m_richTextContentsBox";
             this.m_richTextContentsBox.ReadOnly = true;
             this.m_richTextContentsBox.Size = new System.Drawing.Size(821, 649);
             this.m_richTextContentsBox.TabIndex = 0;
@@ -236,6 +240,20 @@
             this.saveOptionsFileDialog.FileName = "LogTypes.xml";
             this.saveOptionsFileDialog.Filter = "Options files|*.xml";
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearLogsToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(130, 26);
+            // 
+            // clearLogsToolStripMenuItem
+            // 
+            this.clearLogsToolStripMenuItem.Name = "clearLogsToolStripMenuItem";
+            this.clearLogsToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.clearLogsToolStripMenuItem.Text = "Clear Logs";
+            this.clearLogsToolStripMenuItem.Click += new System.EventHandler(this.clearLogsToolStripMenuItem_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -249,6 +267,7 @@
             this.Text = "Log Reader";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -280,6 +299,8 @@
     private System.Windows.Forms.ToolStripMenuItem importLogOptionsToolStripMenuItem;
     private System.Windows.Forms.OpenFileDialog openOptionsFileDialog;
     private System.Windows.Forms.SaveFileDialog saveOptionsFileDialog;
+    private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+    private System.Windows.Forms.ToolStripMenuItem clearLogsToolStripMenuItem;
 }
 
 
