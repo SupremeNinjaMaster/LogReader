@@ -8,55 +8,55 @@ using System.Threading.Tasks;
 
 public class LinesReadResult
 {
-    public string newText;
-    public string[] newLogTypesFound;
+    public string NewText;
+    public string[] NewLogTypesFound;
 };
 
 public delegate void OnLinesReadDelegate(LinesReadResult result );
 
 public class FileController
 {
-    public readonly string path;
-    BackgroundWorker m_worker;
-    DataBuffer m_buffer;
-    LogOptions m_options;
-    bool m_shouldReload = false;
+    public readonly string Path;
+    private BackgroundWorker _worker;
+    private DataBuffer _buffer;
+    private LogOptions _options;
+    private bool _shouldReload = false;
 
     /// <summary>
     /// The index from which we need to start creating text from the buffer
     /// </summary>
-    private int m_startLineIndex = 0;
+    private int _startLineIndex = 0;
 
-    private int m_maxLinesRead = 0;
+    private int _maxLinesRead = 0;
 
     /// <summary>
     /// Delegate invoked in the main thread when we are done reading lines
     /// </summary>
-    OnLinesReadDelegate m_onLinesReadDelegate;
+    OnLinesReadDelegate _onLinesReadDelegate;
 
-    public FileController(string in_path)
+    public FileController(string path)
     {
-        path = in_path;
+        Path = path;
     }
 
-    public void OpenFile(LogOptions in_options)
+    public void OpenFile(LogOptions options)
     {
-        m_options = in_options;
+        _options = options;
 
-        if (m_buffer == null)
+        if (_buffer == null)
         {            
-            m_buffer = new DataBuffer(path, in_options, m_startLineIndex);
-            m_worker = new BackgroundWorker();
-            m_worker.WorkerReportsProgress = true;
-            m_worker.DoWork += new DoWorkEventHandler(DoWork);
-            m_worker.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
-            m_worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(RunWorkerCompleted);
-            m_worker.RunWorkerAsync(m_buffer);
+            _buffer = new DataBuffer(Path, options, _startLineIndex);
+            _worker = new BackgroundWorker();
+            _worker.WorkerReportsProgress = true;
+            _worker.DoWork += new DoWorkEventHandler(DoWork);
+            _worker.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
+            _worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(RunWorkerCompleted);
+            _worker.RunWorkerAsync(_buffer);
         }
         else
         {            
-            m_shouldReload = true;
-            m_buffer.Stop();
+            _shouldReload = true;
+            _buffer.Stop();
         }
     }
 
@@ -64,17 +64,17 @@ public class FileController
     {
         //m_onLinesReadDelegate = null;
 
-        if (m_worker != null && m_worker.IsBusy && m_buffer != null)
+        if (_worker != null && _worker.IsBusy && _buffer != null)
         {
-            m_buffer.Stop();
+            _buffer.Stop();
         } 
     }
 
     public void ClearLog()
     {
         // Save atomically the start line index so we can reload from that start index
-        Interlocked.Exchange(ref m_startLineIndex, m_maxLinesRead);
-        m_shouldReload = true;
+        Interlocked.Exchange(ref _startLineIndex, _maxLinesRead);
+        _shouldReload = true;
         Stop();
     }
 
@@ -102,8 +102,8 @@ public class FileController
                 {
                     // Send the results to the main thread but only if the resulting text has changed
                     LinesReadResult res = new LinesReadResult();
-                    res.newText = buffer.text;
-                    res.newLogTypesFound = buffer.logTypes;
+                    res.NewText = buffer.text;
+                    res.NewLogTypesFound = buffer.logTypes;
                     worker.ReportProgress(100, res);
                 }
             }
@@ -113,26 +113,26 @@ public class FileController
             }
 
             // Save the max lines read into the main thread counter
-            Interlocked.Exchange(ref m_maxLinesRead, buffer.maxLinesRead);
+            Interlocked.Exchange(ref _maxLinesRead, buffer.maxLinesRead);
         }
     }
 
     private void ProgressChanged(object sender, ProgressChangedEventArgs e)
     {
-        if (m_onLinesReadDelegate != null)
+        if (_onLinesReadDelegate != null)
         {
-            m_onLinesReadDelegate.Invoke(e.UserState as LinesReadResult);
+            _onLinesReadDelegate.Invoke(e.UserState as LinesReadResult);
         }
     }
 
     private void RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
     {
         // Add new log types we haven't seen before        
-        m_buffer = null;
+        _buffer = null;
 
-        if( m_shouldReload)
+        if( _shouldReload)
         {
-            OpenFile(m_options);
+            OpenFile(_options);
         }
     }
 
@@ -140,11 +140,11 @@ public class FileController
     {
         get
         {
-            return m_onLinesReadDelegate;
+            return _onLinesReadDelegate;
         }
         set
         {
-            m_onLinesReadDelegate = value;
+            _onLinesReadDelegate = value;
         }
     }
 }

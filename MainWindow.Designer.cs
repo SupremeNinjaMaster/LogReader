@@ -28,7 +28,7 @@
     {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            this.m_richTextContentsBox = new System.Windows.Forms.RichTextBox();
+            this._richTextContentsBox = new System.Windows.Forms.RichTextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fIleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,14 +59,14 @@
             // 
             // m_richTextContentsBox
             // 
-            this.m_richTextContentsBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.m_richTextContentsBox.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.m_richTextContentsBox.Location = new System.Drawing.Point(0, 24);
-            this.m_richTextContentsBox.Name = "m_richTextContentsBox";
-            this.m_richTextContentsBox.ReadOnly = true;
-            this.m_richTextContentsBox.Size = new System.Drawing.Size(821, 649);
-            this.m_richTextContentsBox.TabIndex = 0;
-            this.m_richTextContentsBox.Text = "";
+            this._richTextContentsBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._richTextContentsBox.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._richTextContentsBox.Location = new System.Drawing.Point(0, 24);
+            this._richTextContentsBox.Name = "m_richTextContentsBox";
+            this._richTextContentsBox.ReadOnly = true;
+            this._richTextContentsBox.Size = new System.Drawing.Size(821, 649);
+            this._richTextContentsBox.TabIndex = 0;
+            this._richTextContentsBox.Text = "";
             // 
             // menuStrip1
             // 
@@ -259,7 +259,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(821, 673);
-            this.Controls.Add(this.m_richTextContentsBox);
+            this.Controls.Add(this._richTextContentsBox);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
@@ -276,7 +276,7 @@
 
     #endregion
 
-    private System.Windows.Forms.RichTextBox m_richTextContentsBox;
+    private System.Windows.Forms.RichTextBox _richTextContentsBox;
     private System.Windows.Forms.MenuStrip menuStrip1;
     private System.Windows.Forms.ToolStripMenuItem fIleToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;

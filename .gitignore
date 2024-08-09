@@ -1,0 +1,10 @@
+
+/obj/Debug
+/obj
+/obj
+/obj/Debug
+*.config
+/obj
+/obj/Debug
+*.cache
+obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache

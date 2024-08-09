@@ -57,16 +57,16 @@ public enum EVerbosity
 
 public struct LogOpt
 {
-    public LogOpt( Color in_col, string in_verbosityString)
+    public LogOpt( Color col, string verbosityString)
     {        
-        color = in_col;
-        verbosity = GetVerbosityFromString(in_verbosityString);
+        Color = col;
+        Verbosity = GetVerbosityFromString(verbosityString);
     }
 
-    public LogOpt( Color in_col, EVerbosity in_verbosity)
+    public LogOpt( Color col, EVerbosity verbosity)
     {    
-        color = in_col;
-        verbosity = in_verbosity;
+        Color = col;
+        Verbosity = verbosity;
     }
 
     public static EVerbosity[] GetVerbosityArray()
@@ -84,10 +84,10 @@ public struct LogOpt
         return vals.ToArray();
     }
 
-    public static EVerbosity GetVerbosityFromString(string in_str)
+    public static EVerbosity GetVerbosityFromString(string str)
     {
         EVerbosity result;
-        if( Enum.TryParse(in_str, out result) )
+        if( Enum.TryParse(str, out result) )
         {
             return result;
         }
@@ -96,32 +96,32 @@ public struct LogOpt
         return EVerbosity.Log;
     }
         
-    public Color color;
-    public EVerbosity verbosity;    
+    public Color Color;
+    public EVerbosity Verbosity;    
 }
 
 public class LogOptions : ICloneable
 {
-    Dictionary<string, LogOpt> m_logTypes = new Dictionary<string, LogOpt>();
+    Dictionary<string, LogOpt> _logTypes = new Dictionary<string, LogOpt>();
     
     public LogOptions()
     {
 
     }
 
-    public void AddLogType(string in_logType, Color in_color, EVerbosity in_verbosity)
+    public void AddLogType(string logType, Color color, EVerbosity verbosity)
     {
-        if (!string.IsNullOrEmpty(in_logType) && !m_logTypes.ContainsKey(in_logType))
+        if (!string.IsNullOrEmpty(logType) && !_logTypes.ContainsKey(logType))
         {
-            m_logTypes.Add(in_logType, new LogOpt(in_color, in_verbosity));
+            _logTypes.Add(logType, new LogOpt(color, verbosity));
         }
     }
 
-    public void ChangeLogType(string in_logType, Color in_color, EVerbosity in_verbosity)
+    public void ChangeLogType(string logType, Color color, EVerbosity verbosity)
     {
-        if (!string.IsNullOrEmpty(in_logType) && m_logTypes.ContainsKey(in_logType))
+        if (!string.IsNullOrEmpty(logType) && _logTypes.ContainsKey(logType))
         {            
-            m_logTypes[in_logType] = new LogOpt(in_color, in_verbosity);
+            _logTypes[logType] = new LogOpt(color, verbosity);
         }
     }
 
@@ -129,18 +129,18 @@ public class LogOptions : ICloneable
     {
         get
         {
-            return m_logTypes;
+            return _logTypes;
         }
     }
 
-    public void Load(string in_path)
+    public void Load(string path)
     {
-        if( File.Exists(in_path))
+        if( File.Exists(path))
         {
-            m_logTypes = new Dictionary<string, LogOpt>();
+            _logTypes = new Dictionary<string, LogOpt>();
 
             XmlDocument doc = new XmlDocument();
-            doc.Load(in_path);
+            doc.Load(path);
 
             foreach( XmlNode node in doc.SelectNodes("log_options/log_type"))
             {
@@ -154,36 +154,36 @@ public class LogOptions : ICloneable
         }
     }
 
-    public void Save(string in_path)
+    public void Save(string path)
     {
         XmlDocument doc = new XmlDocument();
         doc.AppendChild(doc.CreateXmlDeclaration("1.0", "UTF-8", "yes"));
         XmlNode root = doc.AppendChild(doc.CreateElement("log_options"));
 
-        string[] logTypes = m_logTypes.Keys.ToArray();
+        string[] logTypes = _logTypes.Keys.ToArray();
         Array.Sort(logTypes);
 
         foreach (string logType in logTypes)
         {
             XmlNode node = root.AppendChild(doc.CreateElement("log_type"));
             node.Attributes.Append(doc.CreateAttribute("name")).Value = logType;
-            node.Attributes.Append(doc.CreateAttribute("color")).Value = ColorTranslator.ToHtml(m_logTypes[logType].color);
-            node.Attributes.Append(doc.CreateAttribute("verbosity")).Value = m_logTypes[logType].verbosity.ToString();
+            node.Attributes.Append(doc.CreateAttribute("color")).Value = ColorTranslator.ToHtml(_logTypes[logType].Color);
+            node.Attributes.Append(doc.CreateAttribute("verbosity")).Value = _logTypes[logType].Verbosity.ToString();
         }
         
         //XmlNode displayMessagesNode = doc.DocumentElement.AppendChild(doc.CreateElement("always_Show_Display_Messages"));
         //displayMessagesNode.Attributes.Append(doc.CreateAttribute("flag")).Value = m_alwaysShowDisplay.ToString();
         
-        doc.Save(in_path);
+        doc.Save(path);
     }
 
-    public bool CanShow(string in_logType, EVerbosity in_verbosity)
+    public bool CanShow(string logType, EVerbosity verbosity)
     {
         // @todo use hashes 
 
-        if(m_logTypes.ContainsKey(in_logType))
+        if(_logTypes.ContainsKey(logType))
         {
-            return in_verbosity <= m_logTypes[in_logType].verbosity;
+            return verbosity <= _logTypes[logType].Verbosity;
         }
 
         // no verbosity 
@@ -193,9 +193,9 @@ public class LogOptions : ICloneable
     public object Clone()
     {
         LogOptions options = new LogOptions();    
-        foreach( var pair in this.m_logTypes)
+        foreach( var pair in this._logTypes)
         {
-            options.m_logTypes.Add(pair.Key, pair.Value);
+            options._logTypes.Add(pair.Key, pair.Value);
 
         }
         return options;

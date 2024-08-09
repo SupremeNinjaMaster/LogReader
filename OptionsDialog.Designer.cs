@@ -32,8 +32,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.m_searchBox = new System.Windows.Forms.TextBox();
             this.applyAllVerbosityButton = new System.Windows.Forms.Button();
-            this.m_applyAllVerbosityComboBox = new System.Windows.Forms.ComboBox();
-            this.m_logOptionListViewComboBox = new System.Windows.Forms.ComboBox();
+            this._applyAllVerbosityComboBox = new System.Windows.Forms.ComboBox();
+            this._logOptionListViewComboBox = new System.Windows.Forms.ComboBox();
             this.m_logOptionListView = new LogOptionListView();
             this.logColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.visibilityColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -49,7 +49,7 @@
             this.panel2.Controls.Add(this.label1);
             this.panel2.Controls.Add(this.m_searchBox);
             this.panel2.Controls.Add(this.applyAllVerbosityButton);
-            this.panel2.Controls.Add(this.m_applyAllVerbosityComboBox);
+            this.panel2.Controls.Add(this._applyAllVerbosityComboBox);
             this.panel2.Location = new System.Drawing.Point(0, 3);
             this.panel2.Margin = new System.Windows.Forms.Padding(6);
             this.panel2.Name = "panel2";
@@ -84,20 +84,20 @@
             // 
             // applyAllVerbosityComboBox
             // 
-            this.m_applyAllVerbosityComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.m_applyAllVerbosityComboBox.FormattingEnabled = true;
-            this.m_applyAllVerbosityComboBox.Location = new System.Drawing.Point(167, 35);
-            this.m_applyAllVerbosityComboBox.Name = "applyAllVerbosityComboBox";
-            this.m_applyAllVerbosityComboBox.Size = new System.Drawing.Size(121, 21);
-            this.m_applyAllVerbosityComboBox.TabIndex = 0;
+            this._applyAllVerbosityComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._applyAllVerbosityComboBox.FormattingEnabled = true;
+            this._applyAllVerbosityComboBox.Location = new System.Drawing.Point(167, 35);
+            this._applyAllVerbosityComboBox.Name = "applyAllVerbosityComboBox";
+            this._applyAllVerbosityComboBox.Size = new System.Drawing.Size(121, 21);
+            this._applyAllVerbosityComboBox.TabIndex = 0;
             // 
             // m_logOptionListViewComboBox
             // 
-            this.m_logOptionListViewComboBox.FormattingEnabled = true;
-            this.m_logOptionListViewComboBox.Location = new System.Drawing.Point(168, 122);
-            this.m_logOptionListViewComboBox.Name = "m_logOptionListViewComboBox";
-            this.m_logOptionListViewComboBox.Size = new System.Drawing.Size(121, 21);
-            this.m_logOptionListViewComboBox.TabIndex = 5;
+            this._logOptionListViewComboBox.FormattingEnabled = true;
+            this._logOptionListViewComboBox.Location = new System.Drawing.Point(168, 122);
+            this._logOptionListViewComboBox.Name = "m_logOptionListViewComboBox";
+            this._logOptionListViewComboBox.Size = new System.Drawing.Size(121, 21);
+            this._logOptionListViewComboBox.TabIndex = 5;
             // 
             // m_logOptionListView
             // 
@@ -140,7 +140,7 @@
             this.ClientSize = new System.Drawing.Size(437, 474);
             this.Controls.Add(this.m_logOptionListView);
             this.Controls.Add(this.panel2);
-            this.Controls.Add(this.m_logOptionListViewComboBox);
+            this.Controls.Add(this._logOptionListViewComboBox);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "OptionsDialog";
             this.Text = "OptionsDialog";
@@ -153,12 +153,12 @@
         #endregion
     private System.Windows.Forms.Panel panel2;
     private System.Windows.Forms.Button applyAllVerbosityButton;
-    private System.Windows.Forms.ComboBox m_applyAllVerbosityComboBox;
+    private System.Windows.Forms.ComboBox _applyAllVerbosityComboBox;
     private LogOptionListView m_logOptionListView;
     private System.Windows.Forms.ColumnHeader logColumnHeader;
     private System.Windows.Forms.ColumnHeader visibilityColumnHeader;
     private System.Windows.Forms.ColumnHeader colorColumnHeader;
-    private System.Windows.Forms.ComboBox m_logOptionListViewComboBox;
+    private System.Windows.Forms.ComboBox _logOptionListViewComboBox;
     private System.Windows.Forms.TextBox m_searchBox;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.ColorDialog m_colorDialog;

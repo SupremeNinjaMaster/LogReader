@@ -10,26 +10,26 @@ using System.Threading;
 
 public struct LogLine
 {
-    public int index;
-    public string logType;
-    public string timestamp;
-    public string content;
-    public int logHash;
-    public EVerbosity verbosity;
+    public int LineIndex;
+    public string LogType;
+    public string Timestamp;
+    public string Content;
+    public int LogHash;
+    public EVerbosity Verbosity;
 
-    public LogLine(int in_index, string in_logType, string in_timestamp, string in_content, EVerbosity in_verbosity)
+    public LogLine(int index, string logType, string timestamp, string content, EVerbosity verbosity)
     {
-        index = in_index;
-        logType = in_logType;
-        timestamp = in_timestamp;
-        content = in_content;
-        logHash = in_logType.GetHashCode();
-        verbosity = in_verbosity;
+        LineIndex = index;
+        LogType = logType;
+        Timestamp = timestamp;
+        Content = content;
+        LogHash = logType.GetHashCode();
+        Verbosity = verbosity;
     }
 
-    public void Append( string in_extraContent)
+    public void Append( string extraContent)
     {
-        content += Environment.NewLine + in_extraContent;
+        Content += Environment.NewLine + extraContent;
     }
 
     public override string ToString()
@@ -37,19 +37,19 @@ public struct LogLine
         // ignore timestamp for now
 
         StringBuilder str = new StringBuilder();
-        if( !string.IsNullOrEmpty(logType))
+        if( !string.IsNullOrEmpty(LogType))
         {
-            str.Append(logType);
+            str.Append(LogType);
             str.Append(": ");
 
-            if (verbosity != EVerbosity.Log)
+            if (Verbosity != EVerbosity.Log)
             {
-                str.Append(verbosity);
+                str.Append(Verbosity);
                 str.Append(": ");
             }
         }        
 
-        str.Append(content);
+        str.Append(Content);
         return str.ToString();
     }
 
@@ -59,27 +59,27 @@ public struct LogLine
 
 public class DataBuffer
 {   
-    string m_text;
+    string _text;
 
-    HashSet<string> m_logTypes;    
-    List<LogLine> m_lines;
-    LogOptions m_logOptions;
-    public readonly string path;
-    private long m_shouldStop = 0;
-    private long m_lastByteRead = 0;
+    HashSet<string> _logTypes;    
+    List<LogLine> _lines;
+    LogOptions _logOptions;
+    public readonly string Path;
+    private long _shouldStop = 0;
+    private long _lastByteRead = 0;
 
     /// <summary>
     /// We only start creating text starting from this index
     /// </summary>
-    private readonly int m_lineStart = 0;
+    private readonly int _lineStart = 0;
 
-    public DataBuffer(string in_path, LogOptions in_options, int in_lineStart)
+    public DataBuffer(string path, LogOptions options, int lineStart)
     {
-        path = in_path;        
-        m_lines = new List<LogLine>();
-        m_logTypes = new HashSet<string>();
-        m_logOptions = in_options;
-        m_lineStart = in_lineStart;
+        Path = path; 
+        _lines = new List<LogLine>();
+        _logTypes = new HashSet<string>();
+        _logOptions = options;
+        _lineStart = lineStart;
     }
 
     /// <summary>
@@ -89,39 +89,39 @@ public class DataBuffer
     {
         int linesRead = 0;
 
-        if (new FileInfo(path).Length > m_lastByteRead)
+        if (new FileInfo(Path).Length > _lastByteRead)
         {
-            using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (FileStream fileStream = new FileStream(Path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                fileStream.Seek(m_lastByteRead, SeekOrigin.Begin);
+                fileStream.Seek(_lastByteRead, SeekOrigin.Begin);
 
                 using (StreamReader reader = new StreamReader(fileStream, Encoding.Default))
                 {                    
                     while (reader.Peek() >= 0)
                     {
                         string line = reader.ReadLine();
-                        LogLine logLine = CreateLine(m_lines.Count +1, line);
+                        LogLine logLine = CreateLine(_lines.Count +1, line);
 
                         // Add the log type we found to the list of log types
-                        if (!string.IsNullOrEmpty(logLine.logType))
+                        if (!string.IsNullOrEmpty(logLine.LogType))
                         {
-                            m_logTypes.Add(logLine.logType);
+                            _logTypes.Add(logLine.LogType);
                         }
 
                         // if there is no log type, it is the continuation of the previous line
-                        if (string.IsNullOrEmpty(logLine.logType) &&
-                            string.IsNullOrEmpty(logLine.timestamp) &&
-                            m_lines.Count > 0)
+                        if (string.IsNullOrEmpty(logLine.LogType) &&
+                            string.IsNullOrEmpty(logLine.Timestamp) &&
+                            _lines.Count > 0)
                         {
-                            logLine.logType = m_lines[m_lines.Count - 1].logType;
-                            logLine.verbosity = m_lines[m_lines.Count - 1].verbosity;
+                            logLine.LogType = _lines[_lines.Count - 1].LogType;
+                            logLine.Verbosity = _lines[_lines.Count - 1].Verbosity;
                         }
 
-                        m_lines.Add(logLine);
+                        _lines.Add(logLine);
                         linesRead++;
                     }
 
-                    m_lastByteRead = fileStream.Length;
+                    _lastByteRead = fileStream.Length;
                 }
                 
             }
@@ -132,25 +132,25 @@ public class DataBuffer
 
     public void Stop()
     {
-        Interlocked.Increment(ref m_shouldStop);
+        Interlocked.Increment(ref _shouldStop);
     }
 
     public bool ShouldStop()
     {
-        return Interlocked.Read(ref m_shouldStop) > 0L;
+        return Interlocked.Read(ref _shouldStop) > 0L;
     }
 
     /// <summary>
     /// Reads and parses a line of text from the log
     /// </summary>
-    /// <param name="in_str"></param>
+    /// <param name="str"></param>
     /// <returns></returns>
-    private LogLine CreateLine(int in_index, string in_str)
+    private LogLine CreateLine(int index, string str)
     {
         string pattern = @"^([\[\d\.\-\:\]\s]{30})?(([A-Za-z0-9]+): )?((Log|Fatal|Error|Warning|Display|Verbose|VeryVerbose): )?(.+)";
 
         Regex reg = new Regex(pattern);
-        Match match = reg.Match(in_str);
+        Match match = reg.Match(str);
 
         if (match != null && match.Success)
         {
@@ -159,14 +159,14 @@ public class DataBuffer
             string verbosity = match.Groups[5].ToString();
             string content = match.Groups[6].ToString();
                         
-            return new LogLine(in_index,
+            return new LogLine(index,
                 logType,
                 timestamp,
                 content,
                 LogOpt.GetVerbosityFromString(verbosity));
         }
         
-        return new LogLine(in_index, "", "", in_str, EVerbosity.Log);
+        return new LogLine(index, "", "", str, EVerbosity.Log);
     }
         
     /// <summary>
@@ -184,11 +184,11 @@ public class DataBuffer
         // color table
         builder.AppendLine(@"{\colortbl;");
         int colorCount = 0;
-        foreach( string str in m_logOptions.optionsMap.Keys)
+        foreach( string str in _logOptions.optionsMap.Keys)
         {
             int hash = str.GetHashCode();
 
-            Color col = m_logOptions.optionsMap[str].color;
+            Color col = _logOptions.optionsMap[str].Color;
             builder.AppendFormat("\\red{0}\\green{1}\\blue{2};", col.R, col.G, col.B);
             builder.AppendLine();
             colorCodeHashMap.Add(hash, string.Format("\\cf{0} ", ++colorCount));
@@ -199,16 +199,16 @@ public class DataBuffer
         // paragraph start, font type, font size
         builder.AppendLine(@"\pard\f0\fs18");
        
-        string maxLineCount = m_lines.Count.ToString();
+        string maxLineCount = _lines.Count.ToString();
         int padding = maxLineCount.Length;
 
-        for ( int i = m_lineStart, max = m_lines.Count; i< max; ++i)
+        for ( int i = _lineStart, max = _lines.Count; i< max; ++i)
         {
-            if (m_logOptions.CanShow(m_lines[i].logType, m_lines[i].verbosity))
+            if (_logOptions.CanShow(_lines[i].LogType, _lines[i].Verbosity))
             {
-                if (colorCodeHashMap.ContainsKey(m_lines[i].logHash))
+                if (colorCodeHashMap.ContainsKey(_lines[i].LogHash))
                 {
-                    builder.Append(colorCodeHashMap[m_lines[i].logHash]);
+                    builder.Append(colorCodeHashMap[_lines[i].LogHash]);
                 }
                 else
                 {
@@ -216,10 +216,10 @@ public class DataBuffer
                 }
                                 
                 // @todo: make line numbers optional
-                string lineNumberString = m_lines[i].index.ToString().PadLeft(padding, ' ');
+                string lineNumberString = _lines[i].LineIndex.ToString().PadLeft(padding, ' ');
                 builder.Append(lineNumberString);
                 builder.Append("  ");
-                builder.AppendLine(m_lines[i].ToString());
+                builder.AppendLine(_lines[i].ToString());
                 builder.Append(@"\par");
             }
         }
@@ -227,10 +227,10 @@ public class DataBuffer
         builder.Append("}");
                 
         string newText = builder.ToString();
-        out_hasTextChanged = newText != m_text;
+        out_hasTextChanged = newText != _text;
         if (out_hasTextChanged)
         {
-            m_text = builder.ToString();
+            _text = builder.ToString();
         }
     }
     
@@ -238,7 +238,7 @@ public class DataBuffer
     {
         get
         {
-            return m_text;
+            return _text;
         }
     }
 
@@ -246,7 +246,7 @@ public class DataBuffer
     {
         get
         {
-            return m_logTypes.ToArray();
+            return _logTypes.ToArray();
         }
     }
 
@@ -254,7 +254,7 @@ public class DataBuffer
     {
         get
         {
-            return m_lines.Count;
+            return _lines.Count;
         }
     }
 }

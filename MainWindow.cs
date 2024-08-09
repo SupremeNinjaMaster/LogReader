@@ -13,19 +13,19 @@ using System.IO;
 public partial class MainWindow : Form
 {
     /// <summary>
-    /// if true, we will se ethe rtf code included with the real text
+    /// if true, we will see the rtf code included with the real text
     /// </summary>
-    bool m_viewRTF = false;
+    private bool _viewRTF = false;
 
     /// <summary>
     /// path to the file we want to read
     /// </summary>
-    string m_filePath;
+    private string _filePath;
 
     /// <summary>
     /// Path where we save the options
     /// </summary>
-    string m_optionsPath = "LogTypes.xml";
+    private string _optionsPath = "LogTypes.xml";
 
     /// <summary>
     /// Used to save teh 
@@ -35,17 +35,17 @@ public partial class MainWindow : Form
     /// <summary>
     /// The current options
     /// </summary>
-    LogOptions m_logOptions;    
+    private LogOptions _logOptions;
 
     /// <summary>
     /// The last thing we searched
     /// </summary>
-    SearchRequest m_lastSearchRequest;
+    private SearchRequest _lastSearchRequest;
 
     /// <summary>
     /// A file controller that runs a buffer on a separate thread
     /// </summary>
-    FileController m_fileController;
+    private FileController _fileController;
 
     public MainWindow()
     {
@@ -55,89 +55,89 @@ public partial class MainWindow : Form
         saveOptionsFileDialog.FileOk += SaveOptionsFileDialog_FileOk;
         openOptionsFileDialog.FileOk += OpenOptionsFileDialog_FileOk;
 
-        m_logOptions = new LogOptions();
-        m_logOptions.Load(m_optionsPath);
+        _logOptions = new LogOptions();
+        _logOptions.Load(_optionsPath);
 
-        m_richTextContentsBox.MouseUp += RichTextContentsBox_MouseUp;
+        _richTextContentsBox.MouseUp += RichTextContentsBox_MouseUp;
         
     }
 
-    private void LoadFile( string in_path, int in_position)
+    private void LoadFile( string path, int position)
     {
-        if( File.Exists(in_path))
+        if( File.Exists(path))
         {
-            m_logOptions.Load("LogTypes.xml");
+            _logOptions.Load("LogTypes.xml");
 
-            if( m_fileController != null)
+            if( _fileController != null)
             {
                 // If we are loading a different file, we stop the old one
-                if (m_fileController.path != in_path)
+                if (_fileController.Path != path)
                 {
-                    m_fileController.Stop();
-                    m_fileController = null;
+                    _fileController.Stop();
+                    _fileController = null;
                 }
             }
 
-            if (m_fileController == null)
+            if (_fileController == null)
             {
-                m_fileController = new FileController(in_path);
-                m_fileController.onLinesReadDelegate += OnLinesRead;
+                _fileController = new FileController(path);
+                _fileController.onLinesReadDelegate += OnLinesRead;
             }
 
-            m_fileController.OpenFile(m_logOptions.Clone() as LogOptions);
+            _fileController.OpenFile(_logOptions.Clone() as LogOptions);
 
             // @todo: the position thingie
-            //m_richTextContentsBox.SelectionStart = in_position;
+            //m_richTextContentsBox.SelectionStart = position;
             //m_richTextContentsBox.ScrollToCaret();
         }
     }       
 
     private void ReloadFile()
     {        
-        if(!string.IsNullOrEmpty(m_filePath))
+        if(!string.IsNullOrEmpty(_filePath))
         {
             //m_lastKnownCaretPosition = m_richTextContentsBox.SelectionStart;
 
-            LoadFile(m_filePath, m_richTextContentsBox.SelectionStart);
+            LoadFile(_filePath, _richTextContentsBox.SelectionStart);
         }
     }
 
-    private void Search( SearchRequest in_search)
+    private void Search( SearchRequest search)
     {
-        if (in_search.searchText == null)
+        if (search.searchText == null)
         {
             return;
         }
 
         RichTextBoxFinds searchFlags = RichTextBoxFinds.None;
 
-        if( in_search.matchCase)
+        if( search.matchCase)
         {
             searchFlags |= RichTextBoxFinds.MatchCase;
         }
 
-        if( in_search.matchWholeWord)
+        if( search.matchWholeWord)
         {
             searchFlags |= RichTextBoxFinds.WholeWord;
         }
 
-        if( in_search.searchBackwards)
+        if( search.searchBackwards)
         {
             searchFlags |= RichTextBoxFinds.Reverse;
         }
 
-        if( in_search.useRegex)
+        if( search.useRegex)
         {
             // @todo: later one day?
         }
 
-        int idx = m_richTextContentsBox.Find(in_search.searchText, m_richTextContentsBox.SelectionStart + m_richTextContentsBox.SelectionLength, searchFlags);
+        int idx = _richTextContentsBox.Find(search.searchText, _richTextContentsBox.SelectionStart + _richTextContentsBox.SelectionLength, searchFlags);
 
         if (idx != -1)
         {
-            m_richTextContentsBox.SelectionStart = idx;
-            m_richTextContentsBox.ScrollToCaret();
-            m_lastSearchRequest = in_search;
+            _richTextContentsBox.SelectionStart = idx;
+            _richTextContentsBox.ScrollToCaret();
+            _lastSearchRequest = search;
         }
     }
 
@@ -153,19 +153,19 @@ public partial class MainWindow : Form
 
     private void OpenLogFileDialog_FileOk(object sender, CancelEventArgs e)
     {
-        m_filePath = openLogFileDialog.FileName;
-        LoadFile(m_filePath, 0);
+        _filePath = openLogFileDialog.FileName;
+        LoadFile(_filePath, 0);
     }
 
     private void OpenOptionsFileDialog_FileOk(object sender, CancelEventArgs e)
     {
-        m_logOptions.Load(openOptionsFileDialog.FileName);
+        _logOptions.Load(openOptionsFileDialog.FileName);
         ReloadFile();        
     }
 
     private void SaveOptionsFileDialog_FileOk(object sender, CancelEventArgs e)
     {
-        m_logOptions.Save(saveOptionsFileDialog.FileName);
+        _logOptions.Save(saveOptionsFileDialog.FileName);
     }
 
     private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -180,19 +180,19 @@ public partial class MainWindow : Form
 
     private void nextSelectionToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        if (!string.IsNullOrEmpty(m_lastSearchRequest.searchText))
+        if (!string.IsNullOrEmpty(_lastSearchRequest.searchText))
         {
-            m_lastSearchRequest.searchBackwards = false;
-            Search(m_lastSearchRequest);
+            _lastSearchRequest.searchBackwards = false;
+            Search(_lastSearchRequest);
         }
     }
 
     private void prevSelectionToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        if (!string.IsNullOrEmpty(m_lastSearchRequest.searchText))
+        if (!string.IsNullOrEmpty(_lastSearchRequest.searchText))
         {
-            m_lastSearchRequest.searchBackwards = true;
-            Search(m_lastSearchRequest);
+            _lastSearchRequest.searchBackwards = true;
+            Search(_lastSearchRequest);
         }
     }
     
@@ -208,23 +208,23 @@ public partial class MainWindow : Form
         searchDialog.ShowDialog();
     }
 
-    private void OnSearchRequested(object in_sender, SearchRequest in_req)
+    private void OnSearchRequested(object sender, SearchRequest req)
     {
-        Search(in_req);
+        Search(req);
 
-        SearchDialog dialog = (SearchDialog)in_sender;
+        SearchDialog dialog = (SearchDialog)sender;
         dialog.Close();        
     }
 
     private void toggleRTFToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        m_viewRTF = !m_viewRTF;
+        _viewRTF = !_viewRTF;
         ReloadFile();
     }
 
     private void logOptionsToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        OptionsDialog optionsDialog = new OptionsDialog(m_optionsPath, m_logOptions);
+        OptionsDialog optionsDialog = new OptionsDialog(_optionsPath, _logOptions);
         optionsDialog.FormClosed += new FormClosedEventHandler(OptionsDialog_FormClosed);
         optionsDialog.ShowDialog();
     }
@@ -236,35 +236,35 @@ public partial class MainWindow : Form
 
     private void OnLinesRead(LinesReadResult res)
     {
-        if (m_viewRTF)
+        if (_viewRTF)
         {
             // If we want to view the rtf we save it as normal text
-            m_richTextContentsBox.Rtf = "";
-            m_richTextContentsBox.Text = res.newText;
-            m_richTextContentsBox.SelectionStart = m_richTextContentsBox.Text.Length;
+            _richTextContentsBox.Rtf = "";
+            _richTextContentsBox.Text = res.NewText;
+            _richTextContentsBox.SelectionStart = _richTextContentsBox.Text.Length;
         }
         else
         {
-            m_richTextContentsBox.Text = "";
-            m_richTextContentsBox.Rtf = res.newText;
-            m_richTextContentsBox.SelectionStart = m_richTextContentsBox.Rtf.Length;
+            _richTextContentsBox.Text = "";
+            _richTextContentsBox.Rtf = res.NewText;
+            _richTextContentsBox.SelectionStart = _richTextContentsBox.Rtf.Length;
         }
         
-        m_richTextContentsBox.ScrollToCaret();
+        _richTextContentsBox.ScrollToCaret();
 
-        for (int i = 0; i < res.newLogTypesFound.Length; ++i)
+        for (int i = 0; i < res.NewLogTypesFound.Length; ++i)
         {
-            m_logOptions.AddLogType(res.newLogTypesFound[i], Color.Black, EVerbosity.Log);
+            _logOptions.AddLogType(res.NewLogTypesFound[i], Color.Black, EVerbosity.Log);
         }
 
-        m_logOptions.Save(m_optionsPath);
+        _logOptions.Save(_optionsPath);
     }
 
     private void repeatLastSearchToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        if (!string.IsNullOrEmpty(m_lastSearchRequest.searchText))
+        if (!string.IsNullOrEmpty(_lastSearchRequest.searchText))
         {
-            Search(m_lastSearchRequest);
+            Search(_lastSearchRequest);
         }
     }
 
@@ -280,7 +280,7 @@ public partial class MainWindow : Form
 
     private void clearLogsToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        m_fileController.ClearLog();
+        _fileController.ClearLog();
     }
 
     private void RichTextContentsBox_MouseUp(object sender, MouseEventArgs e)

@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.ListViewItem;
 
-public delegate void LogOptionVerbositySelected(string in_logName, Rectangle in_rect );
+public delegate void LogOptionVerbositySelected(string logName, Rectangle rect );
 public delegate void LogOptionColorSelected();
 
 public partial class LogOptionListView : ListView
 {
-    private LogOptionVerbositySelected m_verbositySelectedDelegate;
-    private LogOptionColorSelected m_colorSelectedDelegate;
+    private LogOptionVerbositySelected _verbositySelectedDelegate;
+    private LogOptionColorSelected _colorSelectedDelegate;
 
     public LogOptionListView()
     {
@@ -29,9 +29,9 @@ public partial class LogOptionListView : ListView
         }
     }
 
-    public void AddLogOption(string in_logName, LogOpt in_opt)
+    public void AddLogOption(string logName, LogOpt opt)
     {
-        int currIndex = Items.IndexOfKey(in_logName);
+        int currIndex = Items.IndexOfKey(logName);
 
         // Make sure we replace a value that is already there
         if (currIndex >= 0)
@@ -40,28 +40,28 @@ public partial class LogOptionListView : ListView
         }
 
         ListViewItem item = new ListViewItem();        
-        item.Text = in_logName;
-        item.Name = in_logName;
+        item.Text = logName;
+        item.Name = logName;
         item.UseItemStyleForSubItems = false;
         
         ListViewSubItem verNameSubItem = new ListViewSubItem();
-        verNameSubItem.Text = in_opt.verbosity.ToString();
+        verNameSubItem.Text = opt.Verbosity.ToString();
         verNameSubItem.Name = "Verbosity";
         item.SubItems.Add(verNameSubItem);
 
         ListViewSubItem colNameSubItem = new ListViewSubItem();
         // @todo: show color text and invert it
-        // colNameSubItem.Text = in_opt.color.ToString();
-        colNameSubItem.BackColor = in_opt.color;
+        // colNameSubItem.Text = opt.color.ToString();
+        colNameSubItem.BackColor = opt.Color;
         colNameSubItem.Name = "Color";
         item.SubItems.Add(colNameSubItem);
         
         Items.Add(item);
     }
 
-    public void RemoveLogOption(string in_logName)
+    public void RemoveLogOption(string logName)
     {
-        Items.RemoveByKey(in_logName);
+        Items.RemoveByKey(logName);
     }
 
     protected override void OnResize(EventArgs e)
@@ -133,32 +133,32 @@ public partial class LogOptionListView : ListView
 
         if (subItem.Name == "Verbosity")
         {
-            m_verbositySelectedDelegate.Invoke(item.Text, targetItemRect);
+            _verbositySelectedDelegate.Invoke(item.Text, targetItemRect);
         }
         else if( subItem.Name == "Color")
         {
-            m_colorSelectedDelegate.Invoke();
+            _colorSelectedDelegate.Invoke();
         }
     }
 
-    public void SetVerbosity( string in_logName, EVerbosity in_newVerbosity)
+    public void SetVerbosity( string logName, EVerbosity newVerbosity)
     {
         foreach( ListViewItem item in Items)
         {
-            if( item.Text == in_logName)
+            if( item.Text == logName)
             {
-                item.SubItems[1].Text = in_newVerbosity.ToString();
+                item.SubItems[1].Text = newVerbosity.ToString();
             }
         }
     }
 
-    public void SetColor( string in_logName, Color in_color)
+    public void SetColor( string logName, Color color)
     {
         foreach (ListViewItem item in Items)
         {
-            if (item.Text == in_logName)
+            if (item.Text == logName)
             {
-                item.SubItems[2].BackColor = in_color;
+                item.SubItems[2].BackColor = color;
             }
         }
     }
@@ -189,11 +189,11 @@ public partial class LogOptionListView : ListView
     {
         get
         {
-            return m_verbositySelectedDelegate;
+            return _verbositySelectedDelegate;
         }
         set
         {
-            m_verbositySelectedDelegate = value;
+            _verbositySelectedDelegate = value;
         }
     }
         
@@ -201,11 +201,11 @@ public partial class LogOptionListView : ListView
     {
         get
         {
-            return m_colorSelectedDelegate;
+            return _colorSelectedDelegate;
         }
         set
         {
-            m_colorSelectedDelegate = value;
+            _colorSelectedDelegate = value;
         }
     }
 }

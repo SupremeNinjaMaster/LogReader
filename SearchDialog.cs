@@ -17,7 +17,7 @@ public struct SearchRequest
     public bool matchCase;
 }
 
-public delegate void OnSearchRequestedDelegate(object sender, SearchRequest in_req);
+public delegate void OnSearchRequestedDelegate(object sender, SearchRequest req);
 
 public partial class SearchDialog : Form
 {
