@@ -8,6 +8,7 @@
   <log_type name="LoadingProfiler" color="Black" verbosity="Log" />
   <log_type name="LocalizationService" color="Black" verbosity="Log" />
   <log_type name="LogAbilitySystem" color="Black" verbosity="NoLogging" />
+  <log_type name="LogActorComponent" color="Black" verbosity="Log" />
   <log_type name="LogAIModule" color="Black" verbosity="Log" />
   <log_type name="LogAkAudio" color="Black" verbosity="NoLogging" />
   <log_type name="LogAnalytics" color="Black" verbosity="Warning" />
@@ -15,6 +16,7 @@
   <log_type name="LogAnimationCompression" color="Black" verbosity="NoLogging" />
   <log_type name="LogAnimMontage" color="Black" verbosity="Log" />
   <log_type name="LogAppleARKitFace" color="Black" verbosity="Log" />
+  <log_type name="LogAssetEditorSubsystem" color="Black" verbosity="Log" />
   <log_type name="LogAssetManager" color="Black" verbosity="NoLogging" />
   <log_type name="LogAssetRegistry" color="Black" verbosity="NoLogging" />
   <log_type name="LogAsyncCompilation" color="Black" verbosity="NoLogging" />
@@ -28,6 +30,7 @@
   <log_type name="LogAutomationWorker" color="Black" verbosity="NoLogging" />
   <log_type name="LogBackChannel" color="Black" verbosity="NoLogging" />
   <log_type name="LogBlueprint" color="Black" verbosity="Log" />
+  <log_type name="LogBlueprintEditor" color="Black" verbosity="Log" />
   <log_type name="LogBlueprintUserMessages" color="Black" verbosity="NoLogging" />
   <log_type name="LogBragi" color="Black" verbosity="NoLogging" />
   <log_type name="LogChaos" color="Black" verbosity="NoLogging" />
@@ -50,6 +53,7 @@
   <log_type name="LogConfig" color="Black" verbosity="NoLogging" />
   <log_type name="LogConsoleManager" color="Black" verbosity="NoLogging" />
   <log_type name="LogConsoleVariablesEditor" color="Black" verbosity="Log" />
+  <log_type name="LogContentBrowser" color="Black" verbosity="Log" />
   <log_type name="LogContentBundle" color="Black" verbosity="NoLogging" />
   <log_type name="LogContentStreaming" color="Black" verbosity="NoLogging" />
   <log_type name="LogCore" color="Black" verbosity="NoLogging" />
@@ -156,6 +160,7 @@
   <log_type name="LogSkeletalMeshReduction" color="Black" verbosity="NoLogging" />
   <log_type name="LogSkinnedMeshComp" color="Black" verbosity="NoLogging" />
   <log_type name="LogSlate" color="Black" verbosity="NoLogging" />
+  <log_type name="LogSlateStyle" color="Black" verbosity="Log" />
   <log_type name="LogSockets" color="Black" verbosity="Log" />
   <log_type name="LogSQLiteDatabase" color="Black" verbosity="NoLogging" />
   <log_type name="LogStall" color="Black" verbosity="Log" />

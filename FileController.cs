@@ -39,9 +39,14 @@ public class FileController
         Path = path;
     }
 
-    public void OpenFile(LogOptions options)
+    public void OpenFile(LogOptions options, bool resetStartLineIndex)
     {
         _options = options;
+
+        if( resetStartLineIndex)
+        {
+            _startLineIndex = 0;
+        }
 
         if (_buffer == null)
         {            
@@ -132,7 +137,7 @@ public class FileController
 
         if( _shouldReload)
         {
-            OpenFile(_options);
+            OpenFile(_options, false);
         }
     }
 

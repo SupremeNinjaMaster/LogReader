@@ -51,9 +51,9 @@ public partial class MainWindow : Form
     {
         InitializeComponent();
 
-        openLogFileDialog.FileOk += OpenLogFileDialog_FileOk;
-        saveOptionsFileDialog.FileOk += SaveOptionsFileDialog_FileOk;
-        openOptionsFileDialog.FileOk += OpenOptionsFileDialog_FileOk;
+        _openLogFileDialog.FileOk += OpenLogFileDialog_FileOk;
+        _saveOptionsFileDialog.FileOk += SaveOptionsFileDialog_FileOk;
+        _openOptionsFileDialog.FileOk += OpenOptionsFileDialog_FileOk;
 
         _logOptions = new LogOptions();
         _logOptions.Load(_optionsPath);
@@ -62,7 +62,7 @@ public partial class MainWindow : Form
         
     }
 
-    private void LoadFile( string path, int position)
+    private void LoadFile( string path, int position, bool resetStartLineIndex)
     {
         if( File.Exists(path))
         {
@@ -84,7 +84,7 @@ public partial class MainWindow : Form
                 _fileController.onLinesReadDelegate += OnLinesRead;
             }
 
-            _fileController.OpenFile(_logOptions.Clone() as LogOptions);
+            _fileController.OpenFile(_logOptions.Clone() as LogOptions, resetStartLineIndex);
 
             // @todo: the position thingie
             //m_richTextContentsBox.SelectionStart = position;
@@ -92,13 +92,13 @@ public partial class MainWindow : Form
         }
     }       
 
-    private void ReloadFile()
+    private void ReloadFile(bool resetStartLineIndex)
     {        
         if(!string.IsNullOrEmpty(_filePath))
         {
             //m_lastKnownCaretPosition = m_richTextContentsBox.SelectionStart;
 
-            LoadFile(_filePath, _richTextContentsBox.SelectionStart);
+            LoadFile(_filePath, _richTextContentsBox.SelectionStart, resetStartLineIndex);
         }
     }
 
@@ -143,39 +143,29 @@ public partial class MainWindow : Form
 
     private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        MessageBox.Show("The Matrix is much better than Mean Girls");
+        MessageBox.Show("Always do the right thing");
     }
 
     private void openToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        openLogFileDialog.ShowDialog();
+        _openLogFileDialog.ShowDialog();
     }
 
     private void OpenLogFileDialog_FileOk(object sender, CancelEventArgs e)
     {
-        _filePath = openLogFileDialog.FileName;
-        LoadFile(_filePath, 0);
+        _filePath = _openLogFileDialog.FileName;
+        ReloadFile(false);        
     }
 
     private void OpenOptionsFileDialog_FileOk(object sender, CancelEventArgs e)
     {
-        _logOptions.Load(openOptionsFileDialog.FileName);
-        ReloadFile();        
+        _logOptions.Load(_openOptionsFileDialog.FileName);
+        //ReloadFile(true);
     }
 
     private void SaveOptionsFileDialog_FileOk(object sender, CancelEventArgs e)
     {
-        _logOptions.Save(saveOptionsFileDialog.FileName);
-    }
-
-    private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        MessageBox.Show("Later");
-    }
-
-    private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        MessageBox.Show("One day");
+        _logOptions.Save(_saveOptionsFileDialog.FileName);
     }
 
     private void nextSelectionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -198,7 +188,7 @@ public partial class MainWindow : Form
     
     private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        ReloadFile();        
+        ReloadFile(true);
     }
 
     private void findToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -219,7 +209,7 @@ public partial class MainWindow : Form
     private void toggleRTFToolStripMenuItem_Click(object sender, EventArgs e)
     {
         _viewRTF = !_viewRTF;
-        ReloadFile();
+        ReloadFile(false);
     }
 
     private void logOptionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -231,7 +221,7 @@ public partial class MainWindow : Form
 
     private void OptionsDialog_FormClosed(object sender, FormClosedEventArgs e)
     {
-        ReloadFile();
+        ReloadFile(false);
     }
 
     private void OnLinesRead(LinesReadResult res)
@@ -270,12 +260,12 @@ public partial class MainWindow : Form
 
     private void exportLogOptionsToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        saveOptionsFileDialog.ShowDialog();
+        _saveOptionsFileDialog.ShowDialog();
     }
 
     private void importLogOptionsToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        openOptionsFileDialog.ShowDialog();
+        _openOptionsFileDialog.ShowDialog();
     }
 
     private void clearLogsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -287,7 +277,7 @@ public partial class MainWindow : Form
     {
         if (e.Button == MouseButtons.Right)
         {
-            contextMenuStrip1.Show(Cursor.Position);
+            _contextMenuStrip.Show(Cursor.Position);
         }
     }
 }
