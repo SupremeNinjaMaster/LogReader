@@ -13,3 +13,5 @@ Todo.txt
 /bin/Debug/LogReader.exe.config
 /bin/Release/LogReader.pdb
 /bin/Release/LogReader.exe.config
+bin/Debug/LogTypes.xml
+bin/Release/LogTypes.xml
