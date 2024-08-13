@@ -9,3 +9,7 @@
 *.cache
 obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
 Todo.txt
+/bin/Debug/LogReader.pdb
+/bin/Debug/LogReader.exe.config
+/bin/Release/LogReader.pdb
+/bin/Release/LogReader.exe.config
