@@ -15,3 +15,5 @@ Todo.txt
 /bin/Release/LogReader.exe.config
 bin/Debug/LogTypes.xml
 bin/Release/LogTypes.xml
+.vs/LogReader.csproj.dtbcache.json
+*.user

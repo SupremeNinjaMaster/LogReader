@@ -9,13 +9,15 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Forms;
 using System.IO;
+using LogReader.Source.Windows;
 
-public partial class MainWindow : Form
+
+public partial class MainWindow : Form, IColorable
 {
     /// <summary>
     /// if true, we will see the rtf code included with the real text
     /// </summary>
-    private bool _viewRTF = false;
+    private bool _useViewRTF = false;
 
     /// <summary>
     /// path to the file we want to read
@@ -47,6 +49,10 @@ public partial class MainWindow : Form
     /// </summary>
     private FileController _fileController;
 
+    private ColorSet _currentColorSet;
+
+    
+
     public MainWindow()
     {
         InitializeComponent();
@@ -59,13 +65,17 @@ public partial class MainWindow : Form
         _logOptions.Load(_optionsPath);
 
         _richTextContentsBox.MouseUp += RichTextContentsBox_MouseUp;
-        
+
+
+        SetColors(_logOptions.CurrentColorTheme);
+
     }
 
     private void LoadFile( string path, int position, bool resetStartLineIndex)
     {
         if( File.Exists(path))
         {
+            // @todo: why are we doing this???
             _logOptions.Load("LogTypes.xml");
 
             if( _fileController != null)
@@ -84,6 +94,7 @@ public partial class MainWindow : Form
                 _fileController.onLinesReadDelegate += OnLinesRead;
             }
 
+            _logOptions.AddRecentFilePath(path);
             _fileController.OpenFile(_logOptions.Clone() as LogOptions, resetStartLineIndex);
 
             // @todo: the position thingie
@@ -141,12 +152,25 @@ public partial class MainWindow : Form
         }
     }
 
-    private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+    public void SetColors(ColorSet colorSet)
     {
-        MessageBox.Show("Always do the right thing");
+        _logOptions.DefaultColor = colorSet.OnSurface;
+        _currentColorSet = colorSet;
+
+        _menuStrip.SetColors(colorSet);
+        _richTextContentsBox.SetColors(colorSet);
+
+        Utils.ChangeColor(this.Handle);
     }
 
-    private void openToolStripMenuItem_Click(object sender, EventArgs e)
+#region InputHandlers
+
+    private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        MessageBox.Show("https://github.com/SupremeNinjaMaster/LogReader?tab=readme-ov-file");
+    }
+
+    private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
     {
         _openLogFileDialog.ShowDialog();
     }
@@ -168,7 +192,7 @@ public partial class MainWindow : Form
         _logOptions.Save(_saveOptionsFileDialog.FileName);
     }
 
-    private void nextSelectionToolStripMenuItem_Click(object sender, EventArgs e)
+    private void NextSelectionToolStripMenuItem_Click(object sender, EventArgs e)
     {
         if (!string.IsNullOrEmpty(_lastSearchRequest.searchText))
         {
@@ -177,7 +201,7 @@ public partial class MainWindow : Form
         }
     }
 
-    private void prevSelectionToolStripMenuItem_Click(object sender, EventArgs e)
+    private void PrevSelectionToolStripMenuItem_Click(object sender, EventArgs e)
     {
         if (!string.IsNullOrEmpty(_lastSearchRequest.searchText))
         {
@@ -186,33 +210,25 @@ public partial class MainWindow : Form
         }
     }
     
-    private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
+    private void RefreshToolStripMenuItem_Click(object sender, EventArgs e)
     {
         ReloadFile(true);
     }
 
-    private void findToolStripMenuItem1_Click(object sender, EventArgs e)
+    private void FindToolStripMenuItem1_Click(object sender, EventArgs e)
     {
         SearchDialog searchDialog = new SearchDialog();
         searchDialog.SearchRequest += OnSearchRequested;
         searchDialog.ShowDialog();
     }
 
-    private void OnSearchRequested(object sender, SearchRequest req)
+    private void ToggleRTFToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        Search(req);
-
-        SearchDialog dialog = (SearchDialog)sender;
-        dialog.Close();        
-    }
-
-    private void toggleRTFToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        _viewRTF = !_viewRTF;
+        _useViewRTF = !_useViewRTF;
         ReloadFile(false);
     }
 
-    private void logOptionsToolStripMenuItem_Click(object sender, EventArgs e)
+    private void LogOptionsToolStripMenuItem_Click(object sender, EventArgs e)
     {
         OptionsDialog optionsDialog = new OptionsDialog(_optionsPath, _logOptions);
         optionsDialog.FormClosed += new FormClosedEventHandler(OptionsDialog_FormClosed);
@@ -224,33 +240,7 @@ public partial class MainWindow : Form
         ReloadFile(false);
     }
 
-    private void OnLinesRead(LinesReadResult res)
-    {
-        if (_viewRTF)
-        {
-            // If we want to view the rtf we save it as normal text
-            _richTextContentsBox.Rtf = "";
-            _richTextContentsBox.Text = res.NewText;
-            _richTextContentsBox.SelectionStart = _richTextContentsBox.Text.Length;
-        }
-        else
-        {
-            _richTextContentsBox.Text = "";
-            _richTextContentsBox.Rtf = res.NewText;
-            _richTextContentsBox.SelectionStart = _richTextContentsBox.Rtf.Length;
-        }
-        
-        _richTextContentsBox.ScrollToCaret();
-
-        for (int i = 0; i < res.NewLogTypesFound.Length; ++i)
-        {
-            _logOptions.AddLogType(res.NewLogTypesFound[i], Color.Black, EVerbosity.Log);
-        }
-
-        _logOptions.Save(_optionsPath);
-    }
-
-    private void repeatLastSearchToolStripMenuItem_Click(object sender, EventArgs e)
+    private void RepeatLastSearchToolStripMenuItem_Click(object sender, EventArgs e)
     {
         if (!string.IsNullOrEmpty(_lastSearchRequest.searchText))
         {
@@ -258,17 +248,17 @@ public partial class MainWindow : Form
         }
     }
 
-    private void exportLogOptionsToolStripMenuItem_Click(object sender, EventArgs e)
+    private void ExportLogOptionsToolStripMenuItem_Click(object sender, EventArgs e)
     {
         _saveOptionsFileDialog.ShowDialog();
     }
 
-    private void importLogOptionsToolStripMenuItem_Click(object sender, EventArgs e)
+    private void ImportLogOptionsToolStripMenuItem_Click(object sender, EventArgs e)
     {
         _openOptionsFileDialog.ShowDialog();
     }
 
-    private void clearLogsToolStripMenuItem_Click(object sender, EventArgs e)
+    private void ClearLogsToolStripMenuItem_Click(object sender, EventArgs e)
     {
         _fileController.ClearLog();
     }
@@ -280,5 +270,52 @@ public partial class MainWindow : Form
             _contextMenuStrip.Show(Cursor.Position);
         }
     }
+
+    private void LoadRecentToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        if (!string.IsNullOrEmpty(_logOptions.MostRecentFile))
+        {
+            _filePath = _logOptions.MostRecentFile;
+            ReloadFile(false); // @todo: this should be true not false?
+        }
+    }
+
+    private void ThemeDialog_FormClosed(object sender, FormClosedEventArgs e)
+    {
+        SetColors(_logOptions.CurrentColorTheme);
+        Invalidate();
+        ReloadFile(false);
+    }
+
+    private void ThemesToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        ThemeDialog themeDialog = new ThemeDialog(_optionsPath, _logOptions);
+        themeDialog.FormClosed += new FormClosedEventHandler(ThemeDialog_FormClosed);
+        themeDialog.ShowDialog();
+    }
+
+    #endregion
+
+    private void OnSearchRequested(object sender, SearchRequest req)
+    {
+        Search(req);
+
+        SearchDialog dialog = (SearchDialog)sender;
+        dialog.Close();        
+    }
+
+    private void OnLinesRead(LinesReadResult res)
+    {
+        _richTextContentsBox.SetText(res.NewText, _useViewRTF);
+
+        for (int i = 0; i < res.NewLogTypesFound.Length; ++i)
+        {
+            _logOptions.AddLogType(res.NewLogTypesFound[i], Color.Empty, EVerbosity.Log);
+        }
+
+        _logOptions.Save(_optionsPath);
+    }
+
+
 }
 

@@ -39,7 +39,6 @@
             this.visibilityColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colorColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.m_colorDialog = new System.Windows.Forms.ColorDialog();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -82,20 +81,20 @@
             this.applyAllVerbosityButton.UseVisualStyleBackColor = true;
             this.applyAllVerbosityButton.Click += new System.EventHandler(this.ApplyAllVerbosityButton_Click);
             // 
-            // applyAllVerbosityComboBox
+            // _applyAllVerbosityComboBox
             // 
             this._applyAllVerbosityComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._applyAllVerbosityComboBox.FormattingEnabled = true;
             this._applyAllVerbosityComboBox.Location = new System.Drawing.Point(167, 35);
-            this._applyAllVerbosityComboBox.Name = "applyAllVerbosityComboBox";
+            this._applyAllVerbosityComboBox.Name = "_applyAllVerbosityComboBox";
             this._applyAllVerbosityComboBox.Size = new System.Drawing.Size(121, 21);
             this._applyAllVerbosityComboBox.TabIndex = 0;
             // 
-            // m_logOptionListViewComboBox
+            // _logOptionListViewComboBox
             // 
             this._logOptionListViewComboBox.FormattingEnabled = true;
             this._logOptionListViewComboBox.Location = new System.Drawing.Point(168, 122);
-            this._logOptionListViewComboBox.Name = "m_logOptionListViewComboBox";
+            this._logOptionListViewComboBox.Name = "_logOptionListViewComboBox";
             this._logOptionListViewComboBox.Size = new System.Drawing.Size(121, 21);
             this._logOptionListViewComboBox.TabIndex = 5;
             // 
@@ -162,5 +161,4 @@
     private System.Windows.Forms.TextBox m_searchBox;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.ColorDialog m_colorDialog;
-    private System.Windows.Forms.ColorDialog colorDialog1;
 }

@@ -7,6 +7,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Drawing;
 using System.Threading;
+using System.Security.Policy;
 
 public struct LogLine
 {
@@ -171,6 +172,7 @@ public class DataBuffer
         
     /// <summary>
     /// Creates RTF text from the entire file read
+    /// @todo: the color table could be greatly optimized
     /// </summary>
     /// <param name="out_hasTextChanged"></param>
     public void CreateText(out bool out_hasTextChanged)
@@ -184,16 +186,27 @@ public class DataBuffer
         // color table
         builder.AppendLine(@"{\colortbl;");
         int colorCount = 0;
-        foreach( string str in _logOptions.optionsMap.Keys)
+
+        // Add the default color to the color table
+        builder.AppendFormat("\\red{0}\\green{1}\\blue{2};", _logOptions.DefaultColor.R, _logOptions.DefaultColor.G, _logOptions.DefaultColor.B);
+        builder.AppendLine();
+        colorCodeHashMap.Add(0, string.Format("\\cf{0} ", ++colorCount));
+
+        // Add the color table
+        foreach ( string str in _logOptions.optionsMap.Keys)
         {
             int hash = str.GetHashCode();
 
             Color col = _logOptions.optionsMap[str].Color;
+            if( col.IsEmpty)
+            {
+                col = _logOptions.DefaultColor;
+            }
             builder.AppendFormat("\\red{0}\\green{1}\\blue{2};", col.R, col.G, col.B);
             builder.AppendLine();
             colorCodeHashMap.Add(hash, string.Format("\\cf{0} ", ++colorCount));
 
-        }        
+        }
         builder.AppendLine(@"}");
 
         // paragraph start, font type, font size
@@ -212,7 +225,9 @@ public class DataBuffer
                 }
                 else
                 {
-                    builder.Append(@"\cf0 ");
+                    // Use the default color from the theme, not the default from the control
+                    builder.Append(colorCodeHashMap[0]);
+                    //builder.Append(@"\cf0 ");
                 }
                                 
                 // @todo: make line numbers optional
