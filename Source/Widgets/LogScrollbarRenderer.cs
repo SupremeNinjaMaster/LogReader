@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms.VisualStyles;
 using System.Windows.Forms;
 
@@ -25,7 +22,7 @@ public class LogScrollbarRenderer : IColorable
     private Color _arrowColorPressed = Color.FromArgb(0, 122, 204);
 
     private Rectangle _clickBarRectangle;
-    private Rectangle _arrowRectangleTop;
+    //private Rectangle _arrowRectangleTop;
     private Rectangle _arrowRectangleBottom;
     private Rectangle _rectThumb;
     private Rectangle _rectTopArrow;

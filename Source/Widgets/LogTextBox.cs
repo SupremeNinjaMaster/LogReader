@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 public class LogTextBox : RichTextBox, IColorable
 {
     ColorSet _currentColorSet;
-    LogScrollbar _customScrollbar;
+    LogScrollbar _customScrollbar = null;
 
     public LogTextBox() : base()
     {

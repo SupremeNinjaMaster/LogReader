@@ -255,8 +255,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(401, 205);
-            this.Controls.Add(this.label1);
+            this.ClientSize = new System.Drawing.Size(401, 205);            
             this.Controls.Add(this._secondaryLabel);
             this.Controls.Add(this._secondaryForegroundButton);
             this.Controls.Add(this._secondarySampleTextbox);
@@ -305,6 +304,5 @@
         private System.Windows.Forms.Button _secondaryForegroundButton;
         private System.Windows.Forms.TextBox _secondarySampleTextbox;
         private System.Windows.Forms.Button _secondaryBackgroundButton;
-        private System.Windows.Forms.Label label1;
     }
 }
