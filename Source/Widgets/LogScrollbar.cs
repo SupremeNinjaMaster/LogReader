@@ -396,7 +396,7 @@ public class LogScrollbar : Control, IColorable
 
         Console.WriteLine("{0}, {1} -> {2} / {3}", e.Type.ToString(), e.OldValue, e.NewValue, Maximum);
 
-        Utils.SendMessage(Parent.Handle, msg, (IntPtr)(wParam), (IntPtr)(lParam));
+        NativeFunctions.SendMessage(Parent.Handle, msg, (IntPtr)(wParam), (IntPtr)(lParam));
 
     }
 

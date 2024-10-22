@@ -71,12 +71,12 @@ public struct SCROLLINFO
 }
 
 
-public static class Utils
+public static class NativeFunctions
 {
     [DllImport("dwmapi.dll", PreserveSig = true)]
     private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
-    public static void ChangeColor(IntPtr handle)
+    public static void ChangeWindowColor(IntPtr handle)
     {
         int attributeValue = 1;
         DwmSetWindowAttribute(handle, (int)DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE, ref attributeValue, Marshal.SizeOf(attributeValue));
@@ -85,15 +85,8 @@ public static class Utils
     [DllImport("user32.dll", CharSet = CharSet.Auto)]
     public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
 
-
-
     [DllImport("user32.dll")]
     public static extern bool GetScrollInfo(IntPtr hWnd, int fnBar, ref SCROLLINFO lpsi);
-
-    
-
-
-
 }
 
 /// <summary>
@@ -101,17 +94,6 @@ public static class Utils
 /// </summary>
 public static class Win32APIConstants
 {
-    // Retrieves the parameters for a scroll bar control (hwnd must be handle to scroll bar control)
-    /*public const int SB_CTL = 2;
-
-    // Retrieves the parameters for the windows standard vertical scrollbar
-    public const int SB_VERT = 1;
-
-    // Retrieves the parameters for the windows standard horizontal scrollbar
-    public const int SB_HORZ = 0;
-
-    public const int SB_BOTH = 3;*/
-
     // Scrolls to the lower right.
     public const int SB_BOTTOM = 7;
 

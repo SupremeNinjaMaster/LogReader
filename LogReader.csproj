@@ -72,9 +72,18 @@
   <ItemGroup>
     <Compile Include="Source\DataBuffer.cs" />
     <Compile Include="Source\FileController.cs" />
-    <Compile Include="Source\IColorable.cs" />
-    <Compile Include="Source\Utils.cs" />
-    <Compile Include="Source\Widgets\LogMenuStrip.cs">
+    <Compile Include="Source\Interfaces\IColorable.cs" />
+    <Compile Include="Source\Interfaces\ILanguageable.cs" />
+    <Compile Include="Source\Utils\Lang.cs" />
+    <Compile Include="Source\Utils\NativeFunctions.cs" />
+    <Compile Include="Source\Utils\Utils.cs" />
+    <Compile Include="Source\Widgets\Menus\FilePathToolStripMenuItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Source\Widgets\Menus\LanguageToolStripMenuItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Source\Widgets\Menus\LogMenuStrip.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\Widgets\LogOptionListView.cs">
@@ -132,6 +141,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Source\Windows\OptionsDialog.resx">
       <DependentUpon>OptionsDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -164,7 +174,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
-    <Content Include="Todo.txt" />
+    <EmbeddedResource Include="Languages.csv" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">

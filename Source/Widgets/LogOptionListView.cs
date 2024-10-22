@@ -12,21 +12,44 @@ using static System.Windows.Forms.ListViewItem;
 public delegate void LogOptionVerbositySelected(string logName, Rectangle rect );
 public delegate void LogOptionColorSelected();
 
-public partial class LogOptionListView : ListView
+public partial class LogOptionListView : ListView, IColorable
 {
+    private ColorSet _colorSet;
     private LogOptionVerbositySelected _verbositySelectedDelegate;
     private LogOptionColorSelected _colorSelectedDelegate;
-
+    private Brush _primaryBrush;    
+    private Brush _backgroundBrush;
+    private Pen _backgroundPen;
+    private Pen _surfacePen;
+    private Pen _primaryPen;
+    private Brush _onPrimaryBrush;
+    
     public LogOptionListView()
     {
-        InitializeComponent();
+        this.OwnerDraw = true;
+        this.DrawColumnHeader += new DrawListViewColumnHeaderEventHandler(OnColumnHeaderDraw);
+        this.DrawItem += new DrawListViewItemEventHandler(OnItemDraw);
+        this.DrawSubItem += new DrawListViewSubItemEventHandler(OnSubItemDraw);
+        this.Disposed += OnDisposed;
 
+        InitializeComponent();
+          
         FullRowSelect = true;
 
         foreach (ColumnHeader ch in Columns)
         {
             ch.Width = -2;
         }
+    }
+
+    private void OnDisposed(object sender, EventArgs e)
+    {        
+        _primaryBrush?.Dispose();
+        _backgroundBrush?.Dispose();
+        _backgroundPen?.Dispose();
+        _surfacePen?.Dispose();
+        _primaryPen?.Dispose();
+        _onPrimaryBrush?.Dispose();
     }
 
     public void AddLogOption(string logName, LogOpt opt)
@@ -47,11 +70,13 @@ public partial class LogOptionListView : ListView
         ListViewSubItem verNameSubItem = new ListViewSubItem();
         verNameSubItem.Text = opt.Verbosity.ToString();
         verNameSubItem.Name = "Verbosity";
+        verNameSubItem.ForeColor = _colorSet.OnSurface;
+        verNameSubItem.BackColor = _colorSet.Surface;
         item.SubItems.Add(verNameSubItem);
 
         ListViewSubItem colNameSubItem = new ListViewSubItem();
-        // @todo: show color text and invert it
-        // colNameSubItem.Text = opt.color.ToString();
+        colNameSubItem.Text = Utils.ColorToHexString( opt.Color);
+        colNameSubItem.ForeColor = Utils.InvertColor(opt.Color);
         colNameSubItem.BackColor = opt.Color;
         colNameSubItem.Name = "Color";
         item.SubItems.Add(colNameSubItem);
@@ -64,9 +89,69 @@ public partial class LogOptionListView : ListView
         Items.RemoveByKey(logName);
     }
 
+    private void OnColumnHeaderDraw(object sender, DrawListViewColumnHeaderEventArgs e)
+    {          
+        e.Graphics.FillRectangle(_primaryBrush, e.Bounds);
+        Rectangle rect = e.Bounds;
+        rect.Width--;
+        rect.Height--;
+        e.Graphics.DrawRectangle(_backgroundPen, rect);
+        rect.Width--;
+        rect.Height--;
+        e.Graphics.DrawLine(_primaryPen, rect.X, rect.Y, rect.Right, rect.Y);
+        e.Graphics.DrawLine(_primaryPen, rect.X, rect.Y, rect.X, rect.Bottom);
+        e.Graphics.DrawLine(_surfacePen, rect.X + 1, rect.Bottom, rect.Right, rect.Bottom);
+        e.Graphics.DrawLine(_surfacePen, rect.Right, rect.Y + 1, rect.Right, rect.Bottom);
+
+        StringFormat stringFormat = new StringFormat()
+        {
+            Alignment = StringAlignment.Center,
+            LineAlignment = StringAlignment.Center
+        };
+
+        e.Graphics.DrawString(e.Header.Text, e.Font, _onPrimaryBrush, e.Bounds, stringFormat);        
+    }
+
+    private void OnItemDraw(object sender, DrawListViewItemEventArgs e)
+    {
+        Color textColor = _colorSet.OnSurface;
+
+        using (SolidBrush foreBrush = new SolidBrush(textColor))
+        {
+            StringFormat stringFormat = new StringFormat()
+            {
+                Alignment = StringAlignment.Near,
+                LineAlignment = StringAlignment.Near
+            };
+
+            e.Graphics.DrawString(e.Item.Text, e.Item.Font, foreBrush, e.Item.Bounds, stringFormat);
+        }
+    }
+
+    private void OnSubItemDraw(object sender, DrawListViewSubItemEventArgs e)
+    {        
+        e.DrawBackground();
+
+        if ((e.ItemState & ListViewItemStates.Focused) == ListViewItemStates.Focused)
+        {
+            ControlPaint.DrawFocusRectangle(e.Graphics, Rectangle.Inflate(e.Bounds, -1, -1), e.Item.ForeColor, e.Item.BackColor);
+        }
+
+        using (SolidBrush foreBrush = new SolidBrush(e.SubItem.ForeColor))
+        {
+            StringFormat stringFormat = new StringFormat()
+            {
+                Alignment = StringAlignment.Near,
+                LineAlignment = StringAlignment.Near
+            };
+                        
+            e.Graphics.DrawString(e.SubItem.Text, e.SubItem.Font, foreBrush, e.SubItem.Bounds, stringFormat);
+        }
+    }
+
     protected override void OnResize(EventArgs e)
     {
-        // this is expensive!!!
+        // this is very expensive!!!
         //foreach (ColumnHeader ch in Columns)
         //{
         //    ch.Width = -2;
@@ -159,6 +244,8 @@ public partial class LogOptionListView : ListView
             if (item.Text == logName)
             {
                 item.SubItems[2].BackColor = color;
+                item.SubItems[2].Text = Utils.ColorToHexString(color);
+                item.SubItems[2].ForeColor = Utils.InvertColor(color);                
             }
         }
     }
@@ -183,6 +270,28 @@ public partial class LogOptionListView : ListView
         }
 
         return names;
+    }
+
+    public void SetColors(ColorSet colorSet)
+    {
+        BackColor = colorSet.Surface;
+        ForeColor = colorSet.OnSurface;
+
+        _colorSet = colorSet;
+
+        _primaryBrush?.Dispose();
+        _backgroundBrush?.Dispose();
+        _backgroundPen?.Dispose();
+        _surfacePen?.Dispose();
+        _primaryPen?.Dispose();
+        _onPrimaryBrush?.Dispose();
+
+        _primaryBrush = new SolidBrush(_colorSet.Primary);
+        _backgroundBrush = new SolidBrush(_colorSet.Background); ;
+        _backgroundPen = new Pen(_colorSet.Background);
+        _surfacePen = new Pen(_colorSet.Surface);
+        _primaryPen = new Pen(_colorSet.Primary);
+        _onPrimaryBrush = new SolidBrush(_colorSet.OnPrimary);
     }
 
     public LogOptionVerbositySelected VerbositySelected

@@ -104,7 +104,7 @@ public struct LogOpt
 
 public class LogOptions : ICloneable
 {
-    const int MAX_RECENT_FILES = 10;
+    public const int MAX_RECENT_FILES = 10;
     public const string THEME_NAME_DARK = "dark";
     public const string THEME_NAME_LIGHT = "light";
     public const string THEME_NAME_CUSTOM = "custom";
@@ -124,8 +124,19 @@ public class LogOptions : ICloneable
     /// </summary>
     Color _defaultColor;
 
+    /// <summary>
+    /// The chosen theme to use when loading the app
+    /// </summary>
     string _chosenColorThemeName = THEME_NAME_LIGHT;
 
+    /// <summary>
+    /// The chosen language
+    /// </summary>
+    string _chosenLanguage = Lang.LANGUAGE_ENGLISH;
+
+    /// <summary>
+    /// All the custom themes there are
+    /// </summary>
     Dictionary<string, ColorSet> _customColorThemes = new Dictionary<string, ColorSet>();
 
     public LogOptions()
@@ -200,7 +211,7 @@ public class LogOptions : ICloneable
 
                     switch(colorName)
                     {
-                        case "background":      set.Background = col;   break;
+                        case "background":      set.Background = col; break;
                         case "surface":         set.Surface = col; break;
                         case "primary":         set.Primary = col; break;
                         case "secondary":       set.Secondary = col; break;
@@ -218,6 +229,12 @@ public class LogOptions : ICloneable
             if (chosenThemeNode != null)
             {
                 ChosenColorThemeName = chosenThemeNode.InnerText;
+            }
+
+            XmlNode chosenLanguageNode = doc.SelectSingleNode("log_options/chosen_language");
+            if(chosenLanguageNode != null)
+            {
+                Language = chosenLanguageNode.InnerText;
             }
 
             foreach ( XmlNode node in doc.SelectNodes("log_options/recent_files/file"))
@@ -249,6 +266,9 @@ public class LogOptions : ICloneable
 
         XmlNode chosenThemeNode = root.AppendChild(doc.CreateElement("chosen_theme"));
         chosenThemeNode.InnerText = _chosenColorThemeName;
+
+        XmlNode chosenLanguageNode = root.AppendChild(doc.CreateElement("chosen_language"));
+        chosenLanguageNode.InnerText = _chosenLanguage;
 
         XmlNode themesNode = root.AppendChild(doc.CreateElement("custom_themes"));
         foreach (string themeName in _customColorThemes.Keys)
@@ -406,6 +426,18 @@ public class LogOptions : ICloneable
             {
                 return ColorSet.MainLightMode;
             }
+        }
+    }
+
+    public string Language
+    {
+        get
+        {
+            return _chosenLanguage;
+        }
+        set
+        {
+            _chosenLanguage = value;
         }
     }
     

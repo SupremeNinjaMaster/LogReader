@@ -40,7 +40,7 @@ internal class CustomToolStripProfessionalRenderer : ToolStripProfessionalRender
     protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
     {
         CustomMenuColorTable customColorTable = (CustomMenuColorTable)ColorTable;
-        e.Item.ForeColor = customColorTable.CurrentColorSet.OnSurface;
+        e.Item.ForeColor = customColorTable.CurrentColorSet.OnBackground;
 
         base.OnRenderItemText(e);
     }

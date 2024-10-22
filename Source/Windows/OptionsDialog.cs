@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
-public partial class OptionsDialog : Form
+public partial class OptionsDialog : Form, IColorable, ILanguageable
 {
     string _path;     
     LogOptions _options;
@@ -21,10 +21,21 @@ public partial class OptionsDialog : Form
         
 
         InitializeComponent();
+        
+        RefreshLanguageText();
+
+        if (DesignMode)
+        {
+            SetColors(ColorSet.MainDarkMode);
+        }
+        else
+        {
+            SetColors(_options.CurrentColorTheme);
+        }
 
         FormClosed += new FormClosedEventHandler( OptionsDialog_FormClosed);
 
-        m_searchBox.TextChanged += SearchBox_TextChanged;
+        _searchBox.TextChanged += SearchBox_TextChanged;
 
         // Fill up the 'applyAllVerbosityComboBox' selection
         string[] verbosities = LogOpt.GetVerbosityStringArray();
@@ -45,8 +56,8 @@ public partial class OptionsDialog : Form
         _logOptionListViewComboBox.MouseLeave += LogOptionListViewComboBox_MouseLeave;
         _logOptionListViewComboBox.SelectedValueChanged += LogOptionComboBox_SelectedValueChanged;
 
-        m_logOptionListView.VerbositySelected += LogOptionListView_VerbositySelected;
-        m_logOptionListView.ColorSelected += LogOptionsListView_ColorSelected;
+        _logOptionListView.VerbositySelected += LogOptionListView_VerbositySelected;
+        _logOptionListView.ColorSelected += LogOptionsListView_ColorSelected;
 
         ShowItems();
     }
@@ -55,7 +66,7 @@ public partial class OptionsDialog : Form
 
     private void ShowItems()
     {
-        string searchString = m_searchBox.Text;
+        string searchString = _searchBox.Text;
         List<string> logKeysToAdd = new List<string>(_options.optionsMap.Keys);        
 
         logKeysToAdd.Sort();
@@ -64,11 +75,11 @@ public partial class OptionsDialog : Form
         {
             if (string.IsNullOrEmpty(searchString) || logKeysToAdd[i].IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                m_logOptionListView.AddLogOption(logKeysToAdd[i], _options.optionsMap[logKeysToAdd[i]]);
+                _logOptionListView.AddLogOption(logKeysToAdd[i], _options.optionsMap[logKeysToAdd[i]]);
             }
             else
             {
-                m_logOptionListView.RemoveLogOption(logKeysToAdd[i]);
+                _logOptionListView.RemoveLogOption(logKeysToAdd[i]);
             }
         }
     }
@@ -97,14 +108,14 @@ public partial class OptionsDialog : Form
 
         if (DialogResult.OK == m_colorDialog.ShowDialog())
         {            
-            foreach (string logName in m_logOptionListView.GetSelectedLogNames())
+            foreach (string logName in _logOptionListView.GetSelectedLogNames())
             {
                 LogOpt opt;
                 if (_options.optionsMap.TryGetValue(logName, out opt))
                 {
                     opt.Color = m_colorDialog.Color;
                     _options.optionsMap[logName] = opt;
-                    m_logOptionListView.SetColor(logName, opt.Color);
+                    _logOptionListView.SetColor(logName, opt.Color);
                 }
             }
         }
@@ -116,7 +127,7 @@ public partial class OptionsDialog : Form
         EVerbosity newVerbosity;
         if (Enum.TryParse((string) _logOptionListViewComboBox.SelectedItem, out newVerbosity))
         {
-            ApplyVerbosity(newVerbosity, m_logOptionListView.GetSelectedLogNames());
+            ApplyVerbosity(newVerbosity, _logOptionListView.GetSelectedLogNames());
         }
         
         // change the value of the item in the list view
@@ -154,7 +165,7 @@ public partial class OptionsDialog : Form
         EVerbosity newVerbosity;
         if (Enum.TryParse((string)_applyAllVerbosityComboBox.SelectedItem, out newVerbosity))
         {
-            ApplyVerbosity(newVerbosity, m_logOptionListView.GetAllLogNames());
+            ApplyVerbosity(newVerbosity, _logOptionListView.GetAllLogNames());
         }
     }
 
@@ -167,11 +178,48 @@ public partial class OptionsDialog : Form
             {
                 Opt.Verbosity = verbosity;
                 _options.optionsMap[logName] = Opt;
-                m_logOptionListView.SetVerbosity(logName, verbosity);
+                _logOptionListView.SetVerbosity(logName, verbosity);
             }
         }
     }
-    
+
+    public void SetColors(ColorSet colorSet)
+    {
+        this.BackColor = colorSet.Background;
+        this.ForeColor = colorSet.OnBackground;
+
+        panel2.BackColor = colorSet.Background;
+        panel2.ForeColor = colorSet.OnBackground;
+
+        label1.ForeColor = colorSet.OnBackground;
+
+        _searchBox.BackColor = colorSet.Surface;
+        _searchBox.ForeColor = colorSet.OnSurface;
+
+        _logOptionListViewComboBox.BackColor = colorSet.Surface;
+        _logOptionListViewComboBox.ForeColor = colorSet.OnSurface;
+
+        _applyAllVerbosityComboBox.BackColor = colorSet.Surface;
+        _applyAllVerbosityComboBox.ForeColor = colorSet.OnSurface;
+
+        applyAllVerbosityButton.BackColor = colorSet.Surface;
+        applyAllVerbosityButton.ForeColor = colorSet.OnSurface;
+
+
+        _logOptionListView.SetColors(colorSet);
+
+        NativeFunctions.ChangeWindowColor(this.Handle);
+    }
+
+    public void RefreshLanguageText()
+    {
+        this.Text = Lang.Text("TXT_OPTIONS");
+        this.label1.Text = Lang.Text( "TXT_LOG_TYPE_SEARCH");
+        this.applyAllVerbosityButton.Text = Lang.Text( "TXT_APPLY_VERB_ALL");
+        this.logColumnHeader.Text = Lang.Text("TXT_LOG_NAME");
+        this.colorColumnHeader.Text = Lang.Text("TXT_COLOR");
+        this.visibilityColumnHeader.Text = Lang.Text("TXT_VISIBILITY");
+    }
 
 }
 

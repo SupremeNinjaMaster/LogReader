@@ -10,10 +10,14 @@ using System.Threading;
 using System.Windows.Forms;
 using System.IO;
 using LogReader.Source.Windows;
+using System.Globalization;
+using static System.Windows.Forms.LinkLabel;
 
 
-public partial class MainWindow : Form, IColorable
+public partial class MainWindow : Form, IColorable, ILanguageable
 {
+    const string APP_NAME = "Log Reader";
+
     /// <summary>
     /// if true, we will see the rtf code included with the real text
     /// </summary>
@@ -49,26 +53,59 @@ public partial class MainWindow : Form, IColorable
     /// </summary>
     private FileController _fileController;
 
-    private ColorSet _currentColorSet;
-
+    private ToolStripItem[] _languageMenuItems;
     
-
     public MainWindow()
     {
+        Text = APP_NAME;
+
+        // Load the options
+        _logOptions = new LogOptions();
+        _logOptions.Load(_optionsPath);
+
+        // Load and set the language
+        Lang.Instance.LoadLanguages();
+        Lang.Instance.CurrentLanguage = _logOptions.Language;
+
+        // Initialize the controls and components
         InitializeComponent();
+
+        // Create a menu for languages
+        _languageMenuItems = new ToolStripItem[]
+        {
+            new LanguageToolStripMenuItem("TXT_ENGLISH", new EventHandler(LanguageToolStripMenuItem_Click), Lang.LANGUAGE_ENGLISH),
+            new LanguageToolStripMenuItem("TXT_SPANISH", new EventHandler(LanguageToolStripMenuItem_Click), Lang.LANGUAGE_SPANISH),
+            new LanguageToolStripMenuItem("TXT_FRENCH", new EventHandler(LanguageToolStripMenuItem_Click), Lang.LANGUAGE_FRENCH),
+            new LanguageToolStripMenuItem("TXT_ITALIAN", new EventHandler(LanguageToolStripMenuItem_Click), Lang.LANGUAGE_ITAILAN),
+            new LanguageToolStripMenuItem("TXT_PORTUGUESE", new EventHandler(LanguageToolStripMenuItem_Click), Lang.LANGUAGE_PORTUGUESE),
+            new LanguageToolStripMenuItem("TXT_POLISH", new EventHandler(LanguageToolStripMenuItem_Click), Lang.LANGUAGE_POLISH)
+        };
+
+        _languageToolStripMenuItem.DropDownItems.AddRange(_languageMenuItems);
+
+        UpdateRecentFilesMenu();        
 
         _openLogFileDialog.FileOk += OpenLogFileDialog_FileOk;
         _saveOptionsFileDialog.FileOk += SaveOptionsFileDialog_FileOk;
         _openOptionsFileDialog.FileOk += OpenOptionsFileDialog_FileOk;
 
-        _logOptions = new LogOptions();
-        _logOptions.Load(_optionsPath);
 
         _richTextContentsBox.MouseUp += RichTextContentsBox_MouseUp;
 
 
-        SetColors(_logOptions.CurrentColorTheme);
+        // Set the right language
+        RefreshLanguageText();   
 
+        
+
+        if (DesignMode)
+        {
+            SetColors(ColorSet.MainDarkMode);
+        }
+        else
+        {
+            SetColors(_logOptions.CurrentColorTheme);
+        }
     }
 
     private void LoadFile( string path, int position, bool resetStartLineIndex)
@@ -97,6 +134,8 @@ public partial class MainWindow : Form, IColorable
             _logOptions.AddRecentFilePath(path);
             _fileController.OpenFile(_logOptions.Clone() as LogOptions, resetStartLineIndex);
 
+            SetTitleBarText(path);
+
             // @todo: the position thingie
             //m_richTextContentsBox.SelectionStart = position;
             //m_richTextContentsBox.ScrollToCaret();
@@ -111,6 +150,56 @@ public partial class MainWindow : Form, IColorable
 
             LoadFile(_filePath, _richTextContentsBox.SelectionStart, resetStartLineIndex);
         }
+    }
+
+    private void SetTitleBarText( string path)
+    {
+        //using (Graphics g = CreateGraphics())
+        {
+            // @todo: add some dots
+            //Size textSize = TextRenderer.MeasureText(g, path, Font);
+
+            Text = string.Format("{0} - {1}", path, APP_NAME);
+        }
+    }
+
+    public void RefreshLanguageText()
+    {
+        fIleToolStripMenuItem.Text = Lang.Text("TXT_FILE");
+        openToolStripMenuItem.Text = Lang.Text("TXT_OPEN");
+        loadRecentToolStripMenuItem.Text = Lang.Text("TXT_OPEN_LAST");
+        refreshToolStripMenuItem.Text = Lang.Text("TXT_RELOAD");
+        recentFilesToolStripMenuItem.Text = "Recent Files";
+        findToolStripMenuItem.Text = Lang.Text("TXT_SEARCH");
+        nextSelectionToolStripMenuItem.Text = Lang.Text("TXT_NEXT_SELECTION");
+        prevSelectionToolStripMenuItem.Text = Lang.Text("TXT_PREV_SELECTION");
+        findToolStripMenuItem1.Text = Lang.Text("TXT_FIND");
+        repeatLastSearchToolStripMenuItem.Text = Lang.Text("TXT_REPEAT_LAST_SEARCH");
+        optionsToolStripMenuItem1.Text = Lang.Text("TXT_LOG_OPTIONS");
+        _languageToolStripMenuItem.Text = Lang.Text("TXT_LANGUAGE");
+        themesToolStripMenuItem.Text = Lang.Text("TXT_THEMES");
+        toggleRTFToolStripMenuItem.Text = Lang.Text("TXT_TOGGLE_RTF");
+        logOptionsToolStripMenuItem.Text = Lang.Text("TXT_LOG_OPTIONS");
+        exportLogOptionsToolStripMenuItem.Text = Lang.Text("TXT_EXPORT_LOG_OPTIONS");
+        importLogOptionsToolStripMenuItem.Text = Lang.Text("TXT_IMPORT_LOG_OPTIONS");
+        helpToolStripMenuItem.Text = Lang.Text("TXT_HELP");
+        clearLogsToolStripMenuItem.Text = Lang.Text("TXT_CLEAR_LOGS");
+        aboutToolStripMenuItem.Text = Lang.Text("TXT_ABOUT");
+
+        foreach(LanguageToolStripMenuItem menuItem in _languageMenuItems)
+        {
+            menuItem.RefreshLanguageText();
+        }
+    }
+
+    public void UpdateRecentFilesMenu()
+    {   
+        recentFilesToolStripMenuItem.DropDownItems.Clear();
+
+        for ( int i = 0; i < _logOptions.RecentFiles.Length; ++i)
+        {
+            recentFilesToolStripMenuItem.DropDownItems.Add(new FilePathToolStripMenuItem(_logOptions.RecentFiles[i] , new EventHandler(RecentFilesToolStripMenuItem_Click)));
+        }        
     }
 
     private void Search( SearchRequest search)
@@ -155,12 +244,11 @@ public partial class MainWindow : Form, IColorable
     public void SetColors(ColorSet colorSet)
     {
         _logOptions.DefaultColor = colorSet.OnSurface;
-        _currentColorSet = colorSet;
-
+        
         _menuStrip.SetColors(colorSet);
         _richTextContentsBox.SetColors(colorSet);
 
-        Utils.ChangeColor(this.Handle);
+        NativeFunctions.ChangeWindowColor(this.Handle);
     }
 
 #region InputHandlers
@@ -184,12 +272,32 @@ public partial class MainWindow : Form, IColorable
     private void OpenOptionsFileDialog_FileOk(object sender, CancelEventArgs e)
     {
         _logOptions.Load(_openOptionsFileDialog.FileName);
-        //ReloadFile(true);
+        //ReloadFile(true); @rodo: figure out if we need to reload the file when we open options
     }
 
     private void SaveOptionsFileDialog_FileOk(object sender, CancelEventArgs e)
     {
         _logOptions.Save(_saveOptionsFileDialog.FileName);
+    }
+
+    private void LanguageToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        LanguageToolStripMenuItem menuItem = sender as LanguageToolStripMenuItem;
+        if( menuItem != null)
+        {
+            _logOptions.Language = menuItem.Language;
+            Lang.Instance.CurrentLanguage = menuItem.Language;
+            RefreshLanguageText();
+        }               
+    }
+
+    private void RecentFilesToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        FilePathToolStripMenuItem menuItem = sender as FilePathToolStripMenuItem;
+        if (menuItem != null)
+        {
+            LoadFile(menuItem.FullPath, 0, true);
+        }
     }
 
     private void NextSelectionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -217,7 +325,7 @@ public partial class MainWindow : Form, IColorable
 
     private void FindToolStripMenuItem1_Click(object sender, EventArgs e)
     {
-        SearchDialog searchDialog = new SearchDialog();
+        SearchDialog searchDialog = new SearchDialog(_logOptions);
         searchDialog.SearchRequest += OnSearchRequested;
         searchDialog.ShowDialog();
     }

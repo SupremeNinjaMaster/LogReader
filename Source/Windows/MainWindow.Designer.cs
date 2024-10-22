@@ -34,14 +34,17 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadRecentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recentFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nextSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.prevSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.repeatLastSearchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.logOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._languageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.themesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleRTFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.logOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportLogOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importLogOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,7 +55,6 @@
             this._saveOptionsFileDialog = new System.Windows.Forms.SaveFileDialog();
             this._contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.clearLogsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.themesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._menuStrip.SuspendLayout();
             this._contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -87,34 +89,41 @@
             this.fIleToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
             this.loadRecentToolStripMenuItem,
-            this.refreshToolStripMenuItem});
+            this.refreshToolStripMenuItem,
+            this.recentFilesToolStripMenuItem});
             this.fIleToolStripMenuItem.Name = "fIleToolStripMenuItem";
             this.fIleToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fIleToolStripMenuItem.Text = "File";
+        
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
-            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            
             this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
             // 
             // loadRecentToolStripMenuItem
             // 
             this.loadRecentToolStripMenuItem.Name = "loadRecentToolStripMenuItem";
             this.loadRecentToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
-            this.loadRecentToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
-            this.loadRecentToolStripMenuItem.Text = "Open Last";
+            this.loadRecentToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            
             this.loadRecentToolStripMenuItem.Click += new System.EventHandler(this.LoadRecentToolStripMenuItem_Click);
             // 
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
             this.refreshToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
-            this.refreshToolStripMenuItem.Text = "Reload";
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.RefreshToolStripMenuItem_Click);
+            // 
+            // recentFilesToolStripMenuItem
+            // 
+            this.recentFilesToolStripMenuItem.Name = "recentFilesToolStripMenuItem";
+            this.recentFilesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            
             // 
             // findToolStripMenuItem
             // 
@@ -125,14 +134,14 @@
             this.repeatLastSearchToolStripMenuItem});
             this.findToolStripMenuItem.Name = "findToolStripMenuItem";
             this.findToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
-            this.findToolStripMenuItem.Text = "Search";
+            
             // 
             // nextSelectionToolStripMenuItem
             // 
             this.nextSelectionToolStripMenuItem.Name = "nextSelectionToolStripMenuItem";
             this.nextSelectionToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F3)));
             this.nextSelectionToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.nextSelectionToolStripMenuItem.Text = "Next Selection";
+            
             this.nextSelectionToolStripMenuItem.Click += new System.EventHandler(this.NextSelectionToolStripMenuItem_Click);
             // 
             // prevSelectionToolStripMenuItem
@@ -141,7 +150,7 @@
             this.prevSelectionToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.F3)));
             this.prevSelectionToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.prevSelectionToolStripMenuItem.Text = "Prev Selection";
+            
             this.prevSelectionToolStripMenuItem.Click += new System.EventHandler(this.PrevSelectionToolStripMenuItem_Click);
             // 
             // findToolStripMenuItem1
@@ -149,7 +158,7 @@
             this.findToolStripMenuItem1.Name = "findToolStripMenuItem1";
             this.findToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
             this.findToolStripMenuItem1.Size = new System.Drawing.Size(226, 22);
-            this.findToolStripMenuItem1.Text = "Find";
+            
             this.findToolStripMenuItem1.Click += new System.EventHandler(this.FindToolStripMenuItem1_Click);
             // 
             // repeatLastSearchToolStripMenuItem
@@ -157,47 +166,61 @@
             this.repeatLastSearchToolStripMenuItem.Name = "repeatLastSearchToolStripMenuItem";
             this.repeatLastSearchToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
             this.repeatLastSearchToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.repeatLastSearchToolStripMenuItem.Text = "Repeat Last Search";
+            
             this.repeatLastSearchToolStripMenuItem.Click += new System.EventHandler(this.RepeatLastSearchToolStripMenuItem_Click);
             // 
             // optionsToolStripMenuItem1
             // 
             this.optionsToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.logOptionsToolStripMenuItem,
+            this._languageToolStripMenuItem,
             this.themesToolStripMenuItem,
             this.toggleRTFToolStripMenuItem,
+            this.logOptionsToolStripMenuItem,
             this.exportLogOptionsToolStripMenuItem,
             this.importLogOptionsToolStripMenuItem});
             this.optionsToolStripMenuItem1.Name = "optionsToolStripMenuItem1";
             this.optionsToolStripMenuItem1.Size = new System.Drawing.Size(61, 20);
-            this.optionsToolStripMenuItem1.Text = "Options";
+            
             // 
-            // logOptionsToolStripMenuItem
+            // languageToolStripMenuItem
             // 
-            this.logOptionsToolStripMenuItem.Name = "logOptionsToolStripMenuItem";
-            this.logOptionsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.logOptionsToolStripMenuItem.Text = "Log Options";
-            this.logOptionsToolStripMenuItem.Click += new System.EventHandler(this.LogOptionsToolStripMenuItem_Click);
+            this._languageToolStripMenuItem.Name = "languageToolStripMenuItem";
+            this._languageToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            
+            // 
+            // themesToolStripMenuItem
+            // 
+            this.themesToolStripMenuItem.Name = "themesToolStripMenuItem";
+            this.themesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            
+            this.themesToolStripMenuItem.Click += new System.EventHandler(this.ThemesToolStripMenuItem_Click);
             // 
             // toggleRTFToolStripMenuItem
             // 
             this.toggleRTFToolStripMenuItem.Name = "toggleRTFToolStripMenuItem";
             this.toggleRTFToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.toggleRTFToolStripMenuItem.Text = "Toggle RTF";
+            
             this.toggleRTFToolStripMenuItem.Click += new System.EventHandler(this.ToggleRTFToolStripMenuItem_Click);
+            // 
+            // logOptionsToolStripMenuItem
+            // 
+            this.logOptionsToolStripMenuItem.Name = "logOptionsToolStripMenuItem";
+            this.logOptionsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            
+            this.logOptionsToolStripMenuItem.Click += new System.EventHandler(this.LogOptionsToolStripMenuItem_Click);
             // 
             // exportLogOptionsToolStripMenuItem
             // 
             this.exportLogOptionsToolStripMenuItem.Name = "exportLogOptionsToolStripMenuItem";
             this.exportLogOptionsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exportLogOptionsToolStripMenuItem.Text = "Export Log Options";
+            
             this.exportLogOptionsToolStripMenuItem.Click += new System.EventHandler(this.ExportLogOptionsToolStripMenuItem_Click);
             // 
             // importLogOptionsToolStripMenuItem
             // 
             this.importLogOptionsToolStripMenuItem.Name = "importLogOptionsToolStripMenuItem";
             this.importLogOptionsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.importLogOptionsToolStripMenuItem.Text = "Import Log Options";
+            
             this.importLogOptionsToolStripMenuItem.Click += new System.EventHandler(this.ImportLogOptionsToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
@@ -206,13 +229,12 @@
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
+            
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
-            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);            
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
             // _openLogFileDialog
@@ -245,15 +267,8 @@
             // 
             this.clearLogsToolStripMenuItem.Name = "clearLogsToolStripMenuItem";
             this.clearLogsToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
-            this.clearLogsToolStripMenuItem.Text = "Clear Logs";
+            
             this.clearLogsToolStripMenuItem.Click += new System.EventHandler(this.ClearLogsToolStripMenuItem_Click);
-            // 
-            // themesToolStripMenuItem
-            // 
-            this.themesToolStripMenuItem.Name = "themesToolStripMenuItem";
-            this.themesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.themesToolStripMenuItem.Text = "Themes";
-            this.themesToolStripMenuItem.Click += new System.EventHandler(this.ThemesToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -265,7 +280,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this._menuStrip;
             this.Name = "MainWindow";
-            this.Text = "Log Reader";
             this._menuStrip.ResumeLayout(false);
             this._menuStrip.PerformLayout();
             this._contextMenuStrip.ResumeLayout(false);
@@ -302,6 +316,8 @@
     private System.Windows.Forms.ToolStripMenuItem clearLogsToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem loadRecentToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem themesToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem _languageToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem recentFilesToolStripMenuItem;
 }
 
 

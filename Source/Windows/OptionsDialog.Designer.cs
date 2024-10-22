@@ -30,11 +30,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptionsDialog));
             this.panel2 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.m_searchBox = new System.Windows.Forms.TextBox();
+            this._searchBox = new System.Windows.Forms.TextBox();
             this.applyAllVerbosityButton = new System.Windows.Forms.Button();
             this._applyAllVerbosityComboBox = new System.Windows.Forms.ComboBox();
             this._logOptionListViewComboBox = new System.Windows.Forms.ComboBox();
-            this.m_logOptionListView = new LogOptionListView();
+            this._logOptionListView = new LogOptionListView();
             this.logColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.visibilityColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colorColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -46,7 +46,7 @@
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.label1);
-            this.panel2.Controls.Add(this.m_searchBox);
+            this.panel2.Controls.Add(this._searchBox);
             this.panel2.Controls.Add(this.applyAllVerbosityButton);
             this.panel2.Controls.Add(this._applyAllVerbosityComboBox);
             this.panel2.Location = new System.Drawing.Point(0, 3);
@@ -60,24 +60,23 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(11, 10);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(89, 13);
+            this.label1.Size = new System.Drawing.Size(0, 13);
             this.label1.TabIndex = 6;
-            this.label1.Text = "Log Type Search";
             // 
-            // m_searchBox
+            // _searchBox
             // 
-            this.m_searchBox.Location = new System.Drawing.Point(115, 7);
-            this.m_searchBox.Name = "m_searchBox";
-            this.m_searchBox.Size = new System.Drawing.Size(142, 20);
-            this.m_searchBox.TabIndex = 5;
+            this._searchBox.Location = new System.Drawing.Point(175, 7);
+            this._searchBox.Name = "_searchBox";
+            this._searchBox.Size = new System.Drawing.Size(142, 20);
+            this._searchBox.TabIndex = 5;
             // 
             // applyAllVerbosityButton
             // 
+            this.applyAllVerbosityButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.applyAllVerbosityButton.Location = new System.Drawing.Point(11, 33);
             this.applyAllVerbosityButton.Name = "applyAllVerbosityButton";
             this.applyAllVerbosityButton.Size = new System.Drawing.Size(148, 23);
             this.applyAllVerbosityButton.TabIndex = 1;
-            this.applyAllVerbosityButton.Text = "Apply Verbosity to All";
             this.applyAllVerbosityButton.UseVisualStyleBackColor = true;
             this.applyAllVerbosityButton.Click += new System.EventHandler(this.ApplyAllVerbosityButton_Click);
             // 
@@ -98,38 +97,35 @@
             this._logOptionListViewComboBox.Size = new System.Drawing.Size(121, 21);
             this._logOptionListViewComboBox.TabIndex = 5;
             // 
-            // m_logOptionListView
+            // _logOptionListView
             // 
-            this.m_logOptionListView.ColorSelected = null;
-            this.m_logOptionListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this._logOptionListView.ColorSelected = null;
+            this._logOptionListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.logColumnHeader,
             this.visibilityColumnHeader,
             this.colorColumnHeader});
-            this.m_logOptionListView.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.m_logOptionListView.FullRowSelect = true;
-            this.m_logOptionListView.HideSelection = false;
-            this.m_logOptionListView.Location = new System.Drawing.Point(0, 78);
-            this.m_logOptionListView.MultiSelect = false;
-            this.m_logOptionListView.Name = "m_logOptionListView";
-            this.m_logOptionListView.Size = new System.Drawing.Size(437, 396);
-            this.m_logOptionListView.TabIndex = 1;
-            this.m_logOptionListView.UseCompatibleStateImageBehavior = false;
-            this.m_logOptionListView.VerbositySelected = null;
-            this.m_logOptionListView.View = System.Windows.Forms.View.Details;
+            this._logOptionListView.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this._logOptionListView.FullRowSelect = true;
+            this._logOptionListView.HideSelection = false;
+            this._logOptionListView.Location = new System.Drawing.Point(0, 78);
+            this._logOptionListView.MultiSelect = false;
+            this._logOptionListView.Name = "_logOptionListView";
+            this._logOptionListView.Size = new System.Drawing.Size(437, 396);
+            this._logOptionListView.TabIndex = 1;
+            this._logOptionListView.UseCompatibleStateImageBehavior = false;
+            this._logOptionListView.VerbositySelected = null;
+            this._logOptionListView.View = System.Windows.Forms.View.Details;
             // 
             // logColumnHeader
             // 
-            this.logColumnHeader.Text = "Log Name";
             this.logColumnHeader.Width = 131;
             // 
             // visibilityColumnHeader
             // 
-            this.visibilityColumnHeader.Text = "Visibility";
             this.visibilityColumnHeader.Width = 149;
             // 
             // colorColumnHeader
             // 
-            this.colorColumnHeader.Text = "Color";
             this.colorColumnHeader.Width = 152;
             // 
             // OptionsDialog
@@ -137,12 +133,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(437, 474);
-            this.Controls.Add(this.m_logOptionListView);
+            this.Controls.Add(this._logOptionListView);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this._logOptionListViewComboBox);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "OptionsDialog";
-            this.Text = "OptionsDialog";
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.ResumeLayout(false);
@@ -153,12 +148,12 @@
     private System.Windows.Forms.Panel panel2;
     private System.Windows.Forms.Button applyAllVerbosityButton;
     private System.Windows.Forms.ComboBox _applyAllVerbosityComboBox;
-    private LogOptionListView m_logOptionListView;
+    private LogOptionListView _logOptionListView;
     private System.Windows.Forms.ColumnHeader logColumnHeader;
     private System.Windows.Forms.ColumnHeader visibilityColumnHeader;
     private System.Windows.Forms.ColumnHeader colorColumnHeader;
     private System.Windows.Forms.ComboBox _logOptionListViewComboBox;
-    private System.Windows.Forms.TextBox m_searchBox;
+    private System.Windows.Forms.TextBox _searchBox;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.ColorDialog m_colorDialog;
 }

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-using static Utils;
+using static NativeFunctions;
 using System.Runtime.InteropServices;
 
 
@@ -94,7 +94,7 @@ public class LogTextBox : RichTextBox, IColorable
         SCROLLINFO info = new SCROLLINFO();
         info.fMask = (int)SCROLLINFO.ScrollInfoMask.SIF_ALL;
         info.cbSize = Marshal.SizeOf(info);
-        if (Utils.GetScrollInfo(Handle, (int)SCROLLINFO.ScrollBarDirection.SB_VERT, ref info))
+        if (NativeFunctions.GetScrollInfo(Handle, (int)SCROLLINFO.ScrollBarDirection.SB_VERT, ref info))
         {
             // maximum is equal to the location of the last line + small increment (15) + position (0)
             // Console.WriteLine("min: {0}, max: {1}, page: {2}, pos: {3}, trackPos: {4}", info.nMin, info.nMax, info.nPage, info.nPos, info.nTrackPos);
