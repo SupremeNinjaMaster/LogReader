@@ -73,6 +73,8 @@ namespace LogReader.Source.Windows
 
         private void ApplyTestColorSet( ColorSet set)
         {
+            NativeFunctions.ChangeWindowColor(this.Handle);
+
             //_mainForegroundButton.Enabled = _customRadioButton.Checked;
             _mainForegroundButton.ForeColor = set.OnBackground;            
             _mainForegroundButton.BackColor = set.Background;
@@ -108,7 +110,9 @@ namespace LogReader.Source.Windows
             _secondaryForegroundButton.ForeColor = set.OnSecondary;            
             _secondaryBackgroundButton.ForeColor = set.OnSecondary;
             _secondaryForegroundButton.BackColor = set.Secondary;
-            
+
+            this.BackColor = set.Background;
+            this.ForeColor = set.OnBackground;
         }
 
         private void UpdateCustomColorSet()

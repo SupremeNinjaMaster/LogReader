@@ -94,10 +94,8 @@ public partial class MainWindow : Form, IColorable, ILanguageable
 
 
         // Set the right language
-        RefreshLanguageText();   
-
-        
-
+        RefreshLanguageText();
+                
         if (DesignMode)
         {
             SetColors(ColorSet.MainDarkMode);
@@ -106,6 +104,8 @@ public partial class MainWindow : Form, IColorable, ILanguageable
         {
             SetColors(_logOptions.CurrentColorTheme);
         }
+
+
     }
 
     private void LoadFile( string path, int position, bool resetStartLineIndex)
@@ -169,7 +169,7 @@ public partial class MainWindow : Form, IColorable, ILanguageable
         openToolStripMenuItem.Text = Lang.Text("TXT_OPEN");
         loadRecentToolStripMenuItem.Text = Lang.Text("TXT_OPEN_LAST");
         refreshToolStripMenuItem.Text = Lang.Text("TXT_RELOAD");
-        recentFilesToolStripMenuItem.Text = "Recent Files";
+        recentFilesToolStripMenuItem.Text = Lang.Text("TXT_RECENT_FILES");
         findToolStripMenuItem.Text = Lang.Text("TXT_SEARCH");
         nextSelectionToolStripMenuItem.Text = Lang.Text("TXT_NEXT_SELECTION");
         prevSelectionToolStripMenuItem.Text = Lang.Text("TXT_PREV_SELECTION");
@@ -255,7 +255,9 @@ public partial class MainWindow : Form, IColorable, ILanguageable
 
     private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        MessageBox.Show("https://github.com/SupremeNinjaMaster/LogReader?tab=readme-ov-file");
+        LogAboutBox aboutDialog = new LogAboutBox();
+        aboutDialog.SetColors(_logOptions.CurrentColorTheme);
+        aboutDialog.ShowDialog();        
     }
 
     private void OpenToolStripMenuItem_Click(object sender, EventArgs e)

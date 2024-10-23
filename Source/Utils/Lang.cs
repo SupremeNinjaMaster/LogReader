@@ -54,7 +54,8 @@ public class Lang
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    string[] tokens = line.Split( new char[] { ',', '\"' }, StringSplitOptions.RemoveEmptyEntries);
+                    List<string> tokenList = new List<string>( line.Split( new char[] { '\"' }, StringSplitOptions.RemoveEmptyEntries));
+                    tokenList.RemoveAll( s => s == ","); string[] tokens = tokenList.ToArray();
 
                     if (columnIndices == null)
                     {

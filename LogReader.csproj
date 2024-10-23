@@ -173,6 +173,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\logoPictureBox.png" />
     <Content Include="icon.ico" />
     <EmbeddedResource Include="Languages.csv" />
   </ItemGroup>

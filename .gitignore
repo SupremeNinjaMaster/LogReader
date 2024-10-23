@@ -17,3 +17,5 @@ bin/Debug/LogTypes.xml
 bin/Release/LogTypes.xml
 .vs/LogReader.csproj.dtbcache.json
 *.user
+*.vsidx
+/.vs
