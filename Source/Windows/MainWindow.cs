@@ -109,9 +109,11 @@ public partial class MainWindow : Form, IColorable, ILanguageable
     }
 
     private void LoadFile( string path, int position, bool resetStartLineIndex)
-    {
-        if( File.Exists(path))
+    {        
+        if ( File.Exists(path))
         {
+            _filePath = path;
+
             // @todo: why are we doing this???
             _logOptions.Load("LogTypes.xml");
 
