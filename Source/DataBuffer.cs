@@ -36,8 +36,8 @@ public struct LogLine
     public override string ToString()
     {
         // ignore timestamp for now
-
         StringBuilder str = new StringBuilder();
+        
         if( !string.IsNullOrEmpty(LogType))
         {
             str.Append(LogType);
@@ -50,7 +50,7 @@ public struct LogLine
             }
         }        
 
-        str.Append(Content);
+        str.Append(Content).Replace("\\", "\\\\");
         return str.ToString();
     }
 
