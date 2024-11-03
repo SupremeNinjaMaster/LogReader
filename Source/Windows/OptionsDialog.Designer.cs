@@ -29,39 +29,41 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptionsDialog));
             this.panel2 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
+            this._searchLabel = new System.Windows.Forms.Label();
             this._searchBox = new System.Windows.Forms.TextBox();
-            this.applyAllVerbosityButton = new System.Windows.Forms.Button();
+            this._applyAllVerbosityButton = new System.Windows.Forms.Button();
             this._applyAllVerbosityComboBox = new System.Windows.Forms.ComboBox();
             this._logOptionListViewComboBox = new System.Windows.Forms.ComboBox();
             this._logOptionListView = new LogOptionListView();
-            this.logColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.visibilityColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colorColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this._logColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this._visibilityColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this._colorColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.m_colorDialog = new System.Windows.Forms.ColorDialog();
+            this._groupSimilarCheckbox = new System.Windows.Forms.CheckBox();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.label1);
+            this.panel2.Controls.Add(this._groupSimilarCheckbox);
+            this.panel2.Controls.Add(this._searchLabel);
             this.panel2.Controls.Add(this._searchBox);
-            this.panel2.Controls.Add(this.applyAllVerbosityButton);
+            this.panel2.Controls.Add(this._applyAllVerbosityButton);
             this.panel2.Controls.Add(this._applyAllVerbosityComboBox);
             this.panel2.Location = new System.Drawing.Point(0, 3);
             this.panel2.Margin = new System.Windows.Forms.Padding(6);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(437, 83);
+            this.panel2.Size = new System.Drawing.Size(437, 93);
             this.panel2.TabIndex = 0;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 10);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(0, 13);
-            this.label1.TabIndex = 6;
+            this._searchLabel.AutoSize = true;
+            this._searchLabel.Location = new System.Drawing.Point(11, 10);
+            this._searchLabel.Name = "label1";
+            this._searchLabel.Size = new System.Drawing.Size(0, 13);
+            this._searchLabel.TabIndex = 6;
             // 
             // _searchBox
             // 
@@ -72,13 +74,13 @@
             // 
             // applyAllVerbosityButton
             // 
-            this.applyAllVerbosityButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.applyAllVerbosityButton.Location = new System.Drawing.Point(11, 33);
-            this.applyAllVerbosityButton.Name = "applyAllVerbosityButton";
-            this.applyAllVerbosityButton.Size = new System.Drawing.Size(148, 23);
-            this.applyAllVerbosityButton.TabIndex = 1;
-            this.applyAllVerbosityButton.UseVisualStyleBackColor = true;
-            this.applyAllVerbosityButton.Click += new System.EventHandler(this.ApplyAllVerbosityButton_Click);
+            this._applyAllVerbosityButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this._applyAllVerbosityButton.Location = new System.Drawing.Point(11, 33);
+            this._applyAllVerbosityButton.Name = "applyAllVerbosityButton";
+            this._applyAllVerbosityButton.Size = new System.Drawing.Size(148, 23);
+            this._applyAllVerbosityButton.TabIndex = 1;
+            this._applyAllVerbosityButton.UseVisualStyleBackColor = true;
+            this._applyAllVerbosityButton.Click += new System.EventHandler(this.ApplyAllVerbosityButton_Click);
             // 
             // _applyAllVerbosityComboBox
             // 
@@ -101,16 +103,17 @@
             // 
             this._logOptionListView.ColorSelected = null;
             this._logOptionListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.logColumnHeader,
-            this.visibilityColumnHeader,
-            this.colorColumnHeader});
+            this._logColumnHeader,
+            this._visibilityColumnHeader,
+            this._colorColumnHeader});
             this._logOptionListView.Dock = System.Windows.Forms.DockStyle.Bottom;
             this._logOptionListView.FullRowSelect = true;
             this._logOptionListView.HideSelection = false;
-            this._logOptionListView.Location = new System.Drawing.Point(0, 78);
+            this._logOptionListView.Location = new System.Drawing.Point(0, 95);
             this._logOptionListView.MultiSelect = false;
             this._logOptionListView.Name = "_logOptionListView";
-            this._logOptionListView.Size = new System.Drawing.Size(437, 396);
+            this._logOptionListView.OwnerDraw = true;
+            this._logOptionListView.Size = new System.Drawing.Size(437, 379);
             this._logOptionListView.TabIndex = 1;
             this._logOptionListView.UseCompatibleStateImageBehavior = false;
             this._logOptionListView.VerbositySelected = null;
@@ -118,15 +121,25 @@
             // 
             // logColumnHeader
             // 
-            this.logColumnHeader.Width = 131;
+            this._logColumnHeader.Width = 170;
             // 
             // visibilityColumnHeader
             // 
-            this.visibilityColumnHeader.Width = 149;
+            this._visibilityColumnHeader.Width = 140;
             // 
             // colorColumnHeader
             // 
-            this.colorColumnHeader.Width = 152;
+            this._colorColumnHeader.Width = 123;
+            // 
+            // groupSimilarCheckbox
+            // 
+            this._groupSimilarCheckbox.AutoSize = true;
+            this._groupSimilarCheckbox.Location = new System.Drawing.Point(11, 63);
+            this._groupSimilarCheckbox.Name = "groupSimilarCheckbox";
+            this._groupSimilarCheckbox.Size = new System.Drawing.Size(80, 17);
+            this._groupSimilarCheckbox.TabIndex = 7;
+            this._groupSimilarCheckbox.Text = "checkBox1";
+            this._groupSimilarCheckbox.UseVisualStyleBackColor = true;
             // 
             // OptionsDialog
             // 
@@ -146,14 +159,15 @@
 
         #endregion
     private System.Windows.Forms.Panel panel2;
-    private System.Windows.Forms.Button applyAllVerbosityButton;
+    private System.Windows.Forms.Button _applyAllVerbosityButton;
     private System.Windows.Forms.ComboBox _applyAllVerbosityComboBox;
     private LogOptionListView _logOptionListView;
-    private System.Windows.Forms.ColumnHeader logColumnHeader;
-    private System.Windows.Forms.ColumnHeader visibilityColumnHeader;
-    private System.Windows.Forms.ColumnHeader colorColumnHeader;
+    private System.Windows.Forms.ColumnHeader _logColumnHeader;
+    private System.Windows.Forms.ColumnHeader _visibilityColumnHeader;
+    private System.Windows.Forms.ColumnHeader _colorColumnHeader;
     private System.Windows.Forms.ComboBox _logOptionListViewComboBox;
     private System.Windows.Forms.TextBox _searchBox;
-    private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Label _searchLabel;
     private System.Windows.Forms.ColorDialog m_colorDialog;
+    private System.Windows.Forms.CheckBox _groupSimilarCheckbox;
 }

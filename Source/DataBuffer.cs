@@ -9,53 +9,6 @@ using System.Drawing;
 using System.Threading;
 using System.Security.Policy;
 
-public struct LogLine
-{
-    public int LineIndex;
-    public string LogType;
-    public string Timestamp;
-    public string Content;
-    public int LogHash;
-    public EVerbosity Verbosity;
-
-    public LogLine(int index, string logType, string timestamp, string content, EVerbosity verbosity)
-    {
-        LineIndex = index;
-        LogType = logType;
-        Timestamp = timestamp;
-        Content = content;
-        LogHash = logType.GetHashCode();
-        Verbosity = verbosity;
-    }
-
-    public void Append( string extraContent)
-    {
-        Content += Environment.NewLine + extraContent;
-    }
-
-    public override string ToString()
-    {
-        // ignore timestamp for now
-        StringBuilder str = new StringBuilder();
-        
-        if( !string.IsNullOrEmpty(LogType))
-        {
-            str.Append(LogType);
-            str.Append(": ");
-
-            if (Verbosity != EVerbosity.Log)
-            {
-                str.Append(Verbosity);
-                str.Append(": ");
-            }
-        }        
-
-        str.Append(Content).Replace("\\", "\\\\");
-        return str.ToString();
-    }
-
-    public static readonly LogLine INVALID = new LogLine(-1, "", "", "", EVerbosity.Log);
-}
 
 
 public class DataBuffer
@@ -214,6 +167,7 @@ public class DataBuffer
        
         string maxLineCount = _lines.Count.ToString();
         int padding = maxLineCount.Length;
+        int similarLineCount = 0;
 
         for ( int i = _lineStart, max = _lines.Count; i< max; ++i)
         {
@@ -229,13 +183,28 @@ public class DataBuffer
                     builder.Append(colorCodeHashMap[0]);
                     //builder.Append(@"\cf0 ");
                 }
+
+                if(_logOptions.UseSimilarLineGrouping)
+                {
+                    if (i < _lines.Count - 1 && _lines[i].IsSimilar(_lines[i+1]))
+                    {
+                        similarLineCount++;
+                        continue;
+                    }
+                }
                                 
                 // @todo: make line numbers optional
                 string lineNumberString = _lines[i].LineIndex.ToString().PadLeft(padding, ' ');
                 builder.Append(lineNumberString);
                 builder.Append("  ");
+                if(_logOptions.UseSimilarLineGrouping && similarLineCount > 0)
+                {
+                    builder.Append("(x" + ++similarLineCount + ") ");
+                }
                 builder.AppendLine(_lines[i].ToString());
                 builder.Append(@"\par");
+
+                similarLineCount = 0;
             }
         }
 

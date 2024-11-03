@@ -139,6 +139,8 @@ public class LogOptions : ICloneable
     /// </summary>
     Dictionary<string, ColorSet> _customColorThemes = new Dictionary<string, ColorSet>();
 
+    bool _useSimilarLineGrouping = true;
+
     public LogOptions()
     {
 
@@ -237,6 +239,12 @@ public class LogOptions : ICloneable
                 Language = chosenLanguageNode.InnerText;
             }
 
+            XmlNode groupSimilarLinesNode = doc.SelectSingleNode("log_options/group_similar_lines");
+            if(groupSimilarLinesNode != null)
+            {
+                bool.TryParse(groupSimilarLinesNode.InnerText, out _useSimilarLineGrouping);
+            }
+            
             foreach ( XmlNode node in doc.SelectNodes("log_options/recent_files/file"))
             {
                 string recentFilePath = node.Attributes["path"].Value;
@@ -269,6 +277,9 @@ public class LogOptions : ICloneable
 
         XmlNode chosenLanguageNode = root.AppendChild(doc.CreateElement("chosen_language"));
         chosenLanguageNode.InnerText = _chosenLanguage;
+
+        XmlNode groupSimilarLinesNode = root.AppendChild(doc.CreateElement("group_similar_lines"));
+        groupSimilarLinesNode.InnerText = _useSimilarLineGrouping.ToString();
 
         XmlNode themesNode = root.AppendChild(doc.CreateElement("custom_themes"));
         foreach (string themeName in _customColorThemes.Keys)
@@ -303,9 +314,7 @@ public class LogOptions : ICloneable
             node.Attributes.Append(doc.CreateAttribute("name")).Value = logType;
             node.Attributes.Append(doc.CreateAttribute("color")).Value = ColorTranslator.ToHtml(_logTypes[logType].Color);
             node.Attributes.Append(doc.CreateAttribute("verbosity")).Value = _logTypes[logType].Verbosity.ToString();
-        }
-        
-        
+        }        
         
         doc.Save(path);
     }
@@ -351,8 +360,9 @@ public class LogOptions : ICloneable
         options._recentFiles = new List<string>(_recentFiles);
         options._defaultColor = _defaultColor;
         options._chosenColorThemeName = _chosenColorThemeName;
+        options._useSimilarLineGrouping = _useSimilarLineGrouping;
 
-        foreach( var pair in this._customColorThemes)
+        foreach ( var pair in this._customColorThemes)
         {
             options._customColorThemes.Add(pair.Key, pair.Value);
         }
@@ -441,4 +451,16 @@ public class LogOptions : ICloneable
         }
     }
     
+    public bool UseSimilarLineGrouping
+    {
+        get
+        {
+            return _useSimilarLineGrouping;
+        }
+
+        set
+        {
+            _useSimilarLineGrouping = value;
+        }
+    }
 }

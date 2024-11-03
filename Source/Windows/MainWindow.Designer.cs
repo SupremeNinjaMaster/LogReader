@@ -53,7 +53,7 @@
             this._saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this._openOptionsFileDialog = new System.Windows.Forms.OpenFileDialog();
             this._saveOptionsFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this._contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this._contextMenuStrip = new LogContextMenu(this.components);
             this.clearLogsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._menuStrip.SuspendLayout();
             this._contextMenuStrip.SuspendLayout();
@@ -312,7 +312,7 @@
     private System.Windows.Forms.ToolStripMenuItem importLogOptionsToolStripMenuItem;
     private System.Windows.Forms.OpenFileDialog _openOptionsFileDialog;
     private System.Windows.Forms.SaveFileDialog _saveOptionsFileDialog;
-    private System.Windows.Forms.ContextMenuStrip _contextMenuStrip;
+    private LogContextMenu _contextMenuStrip;
     private System.Windows.Forms.ToolStripMenuItem clearLogsToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem loadRecentToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem themesToolStripMenuItem;

@@ -206,48 +206,15 @@ public partial class MainWindow : Form, IColorable, ILanguageable
 
     private void Search( SearchRequest search)
     {
-        if (search.searchText == null)
-        {
-            return;
-        }
-
-        RichTextBoxFinds searchFlags = RichTextBoxFinds.None;
-
-        if( search.matchCase)
-        {
-            searchFlags |= RichTextBoxFinds.MatchCase;
-        }
-
-        if( search.matchWholeWord)
-        {
-            searchFlags |= RichTextBoxFinds.WholeWord;
-        }
-
-        if( search.searchBackwards)
-        {
-            searchFlags |= RichTextBoxFinds.Reverse;
-        }
-
-        if( search.useRegex)
-        {
-            // @todo: later one day?
-        }
-
-        int idx = _richTextContentsBox.Find(search.searchText, _richTextContentsBox.SelectionStart + _richTextContentsBox.SelectionLength, searchFlags);
-
-        if (idx != -1)
-        {
-            _richTextContentsBox.SelectionStart = idx;
-            _richTextContentsBox.ScrollToCaret();
-            _lastSearchRequest = search;
-        }
+        _richTextContentsBox.Search(search);
+        _lastSearchRequest = search;        
     }
 
     public void SetColors(ColorSet colorSet)
     {
-        _logOptions.DefaultColor = colorSet.OnSurface;
-        
+        _logOptions.DefaultColor = colorSet.OnSurface;        
         _menuStrip.SetColors(colorSet);
+        _contextMenuStrip.SetColors(colorSet);
         _richTextContentsBox.SetColors(colorSet);
 
         NativeFunctions.ChangeWindowColor(this.Handle);
@@ -290,6 +257,8 @@ public partial class MainWindow : Form, IColorable, ILanguageable
         if( menuItem != null)
         {
             _logOptions.Language = menuItem.Language;
+            _logOptions.Save(_optionsPath);
+
             Lang.Instance.CurrentLanguage = menuItem.Language;
             RefreshLanguageText();
         }               
@@ -329,7 +298,7 @@ public partial class MainWindow : Form, IColorable, ILanguageable
 
     private void FindToolStripMenuItem1_Click(object sender, EventArgs e)
     {
-        SearchDialog searchDialog = new SearchDialog(_logOptions);
+        SearchDialog searchDialog = new SearchDialog(_logOptions, _lastSearchRequest);
         searchDialog.SearchRequest += OnSearchRequested;
         searchDialog.ShowDialog();
     }

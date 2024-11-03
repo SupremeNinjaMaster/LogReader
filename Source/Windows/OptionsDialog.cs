@@ -59,10 +59,16 @@ public partial class OptionsDialog : Form, IColorable, ILanguageable
         _logOptionListView.VerbositySelected += LogOptionListView_VerbositySelected;
         _logOptionListView.ColorSelected += LogOptionsListView_ColorSelected;
 
+        _groupSimilarCheckbox.Checked = _options.UseSimilarLineGrouping;            
+        _groupSimilarCheckbox.CheckedChanged += GroupSimilarCheckbox_CheckedChanged;
+
         ShowItems();
     }
 
-
+    private void GroupSimilarCheckbox_CheckedChanged(object sender, EventArgs e)
+    {
+        _options.UseSimilarLineGrouping = _groupSimilarCheckbox.Checked;
+    }
 
     private void ShowItems()
     {
@@ -191,7 +197,7 @@ public partial class OptionsDialog : Form, IColorable, ILanguageable
         panel2.BackColor = colorSet.Background;
         panel2.ForeColor = colorSet.OnBackground;
 
-        label1.ForeColor = colorSet.OnBackground;
+        _searchLabel.ForeColor = colorSet.OnBackground;
 
         _searchBox.BackColor = colorSet.Surface;
         _searchBox.ForeColor = colorSet.OnSurface;
@@ -202,8 +208,8 @@ public partial class OptionsDialog : Form, IColorable, ILanguageable
         _applyAllVerbosityComboBox.BackColor = colorSet.Surface;
         _applyAllVerbosityComboBox.ForeColor = colorSet.OnSurface;
 
-        applyAllVerbosityButton.BackColor = colorSet.Surface;
-        applyAllVerbosityButton.ForeColor = colorSet.OnSurface;
+        _applyAllVerbosityButton.BackColor = colorSet.Surface;
+        _applyAllVerbosityButton.ForeColor = colorSet.OnSurface;
 
 
         _logOptionListView.SetColors(colorSet);
@@ -214,11 +220,12 @@ public partial class OptionsDialog : Form, IColorable, ILanguageable
     public void RefreshLanguageText()
     {
         this.Text = Lang.Text("TXT_OPTIONS");
-        this.label1.Text = Lang.Text( "TXT_LOG_TYPE_SEARCH");
-        this.applyAllVerbosityButton.Text = Lang.Text( "TXT_APPLY_VERB_ALL");
-        this.logColumnHeader.Text = Lang.Text("TXT_LOG_NAME");
-        this.colorColumnHeader.Text = Lang.Text("TXT_COLOR");
-        this.visibilityColumnHeader.Text = Lang.Text("TXT_VISIBILITY");
+        this._searchLabel.Text = Lang.Text( "TXT_LOG_TYPE_SEARCH");
+        this._applyAllVerbosityButton.Text = Lang.Text( "TXT_APPLY_VERB_ALL");
+        this._logColumnHeader.Text = Lang.Text("TXT_LOG_NAME");
+        this._colorColumnHeader.Text = Lang.Text("TXT_COLOR");
+        this._visibilityColumnHeader.Text = Lang.Text("TXT_VISIBILITY");
+        this._groupSimilarCheckbox.Text = Lang.Text("TXT_GROUP_SIMILAR_LINES");
     }
 
 }

@@ -31,6 +31,57 @@ public class LogTextBox : RichTextBox, IColorable
         }
     }
 
+    public void Search(SearchRequest search)
+    {
+        if (string.IsNullOrEmpty(search.searchText))
+        {
+            return;
+        }
+
+        RichTextBoxFinds searchFlags = RichTextBoxFinds.None;
+
+        if (search.matchCase)
+        {
+            searchFlags |= RichTextBoxFinds.MatchCase;
+        }
+
+        if (search.matchWholeWord)
+        {
+            searchFlags |= RichTextBoxFinds.WholeWord;
+        }
+
+        if (search.searchBackwards)
+        {
+            searchFlags |= RichTextBoxFinds.Reverse;
+        }
+
+        if (search.useRegex)
+        {
+            // @todo: later one day?
+        }
+
+        int idx = Find(search.searchText, SelectionStart + SelectionLength, searchFlags);
+
+        // if we fail to find something, go to the end and search again
+        if (idx == -1)
+        {
+            if (search.searchBackwards)
+            {
+                idx = Find(search.searchText, TextLength - 1, searchFlags);
+            }
+            else
+            {
+                idx = Find(search.searchText, 0, searchFlags);
+            }
+        }
+
+        if (idx != -1)
+        {
+            SelectionStart = idx;
+            ScrollToCaret();
+        }
+    }
+
     public void SetColors(ColorSet colorSet)
     {
         _currentColorSet = colorSet;

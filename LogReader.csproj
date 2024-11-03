@@ -75,13 +75,19 @@
     <Compile Include="Source\FileController.cs" />
     <Compile Include="Source\Interfaces\IColorable.cs" />
     <Compile Include="Source\Interfaces\ILanguageable.cs" />
+    <Compile Include="Source\LogLine.cs" />
     <Compile Include="Source\Utils\Lang.cs" />
     <Compile Include="Source\Utils\NativeFunctions.cs" />
     <Compile Include="Source\Utils\Utils.cs" />
+    <Compile Include="Source\Widgets\Menus\CustomMenuColorTable.cs" />
+    <Compile Include="Source\Widgets\Menus\CustomToolStripProfessionalRenderer.cs" />
     <Compile Include="Source\Widgets\Menus\FilePathToolStripMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\Widgets\Menus\LanguageToolStripMenuItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Source\Widgets\Menus\LogContextMenu.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\Widgets\Menus\LogMenuStrip.cs">

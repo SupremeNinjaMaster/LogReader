@@ -24,11 +24,19 @@ public partial class SearchDialog : Form, IColorable, ILanguageable
     private OnSearchRequestedDelegate _searchDelegate;
     private readonly LogOptions _options;
 
-    public SearchDialog(LogOptions logOptions)
+    public SearchDialog(LogOptions logOptions, SearchRequest lastSearchRequest)
     {
         _options = logOptions;
 
         InitializeComponent();
+
+        if(!string.IsNullOrEmpty( lastSearchRequest.searchText))
+        {
+            _searchTextBox.Text = lastSearchRequest.searchText;
+        }
+
+        // @todo: do regex search
+        _checkBoxRegex.Enabled = false;
 
         RefreshLanguageText();
 
@@ -45,11 +53,11 @@ public partial class SearchDialog : Form, IColorable, ILanguageable
     private void TriggerSearch()
     {
         SearchRequest req;
-        req.searchText = this.m_searchTextBox.Text;
-        req.useRegex = this.checkBoxRegex.Checked;
-        req.matchCase = this.checkBoxMatchCase.Checked;
-        req.matchWholeWord = this.checkBoxMatchCase.Checked;
-        req.searchBackwards = this.checkBoxBackwards.Checked;
+        req.searchText = this._searchTextBox.Text;
+        req.useRegex = this._checkBoxRegex.Checked;
+        req.matchCase = this._checkBoxMatchCase.Checked;
+        req.matchWholeWord = this._checkBoxMatchWholeWord.Checked;
+        req.searchBackwards = this._checkBoxBackwards.Checked;
 
         if( _searchDelegate != null )
         {
@@ -76,42 +84,39 @@ public partial class SearchDialog : Form, IColorable, ILanguageable
         this.ForeColor = colorSet.OnSurface;
         this.BackColor = colorSet.Background;
 
-        m_searchTextBox.ForeColor = colorSet.OnSurface;
-        m_searchTextBox.BackColor = colorSet.Surface;
+        _searchTextBox.ForeColor = colorSet.OnSurface;
+        _searchTextBox.BackColor = colorSet.Surface;
 
-        buttonSearch.ForeColor = colorSet.OnSurface;
-        buttonSearch.BackColor = colorSet.Surface;
+        _buttonSearch.ForeColor = colorSet.OnSurface;
+        _buttonSearch.BackColor = colorSet.Surface;
 
-        groupBox1.ForeColor = colorSet.OnSurface;
-        groupBox1.BackColor = colorSet.Surface;
+        _groupBox1.ForeColor = colorSet.OnSurface;
+        _groupBox1.BackColor = colorSet.Surface;
 
-        checkBoxRegex.ForeColor = colorSet.OnSurface;
-        checkBoxRegex.BackColor = colorSet.Surface;
+        _checkBoxRegex.ForeColor = colorSet.OnSurface;
+        _checkBoxRegex.BackColor = colorSet.Surface;
 
-        checkBoxBackwards.ForeColor = colorSet.OnSurface;
-        checkBoxBackwards.BackColor = colorSet.Surface;
+        _checkBoxBackwards.ForeColor = colorSet.OnSurface;
+        _checkBoxBackwards.BackColor = colorSet.Surface;
 
-        checkBoxMatchWholeWord.ForeColor = colorSet.OnSurface;
-        checkBoxMatchWholeWord.BackColor = colorSet.Surface;
+        _checkBoxMatchWholeWord.ForeColor = colorSet.OnSurface;
+        _checkBoxMatchWholeWord.BackColor = colorSet.Surface;
 
-        checkBoxMatchCase.ForeColor = colorSet.OnSurface;
-        checkBoxMatchCase.BackColor = colorSet.Surface;
+        _checkBoxMatchCase.ForeColor = colorSet.OnSurface;
+        _checkBoxMatchCase.BackColor = colorSet.Surface;
 
         NativeFunctions.ChangeWindowColor(this.Handle);
     }
 
     public void RefreshLanguageText()
     {
-
-        this.buttonSearch.Text = Lang.Text("TXT_SEARCH");
-        this.groupBox1.Text = Lang.Text("TXT_SEARCH_OPTIONS");
-        this.checkBoxRegex.Text = Lang.Text("TXT_REGEX");
-        this.checkBoxBackwards.Text = Lang.Text("TXT_SEARCH_BACK");
-        this.checkBoxMatchWholeWord.Text = Lang.Text("TXT_MATCH_WORD");
-        this.checkBoxMatchCase.Text = Lang.Text("TXT_MATCH_CASE");
+        this._buttonSearch.Text = Lang.Text("TXT_SEARCH");
+        this._groupBox1.Text = Lang.Text("TXT_SEARCH_OPTIONS");
+        this._checkBoxRegex.Text = Lang.Text("TXT_REGEX");
+        this._checkBoxBackwards.Text = Lang.Text("TXT_SEARCH_BACK");
+        this._checkBoxMatchWholeWord.Text = Lang.Text("TXT_MATCH_WORD");
+        this._checkBoxMatchCase.Text = Lang.Text("TXT_MATCH_CASE");
         this.Text = Lang.Text("TXT_SEARCH");
-
-
     }
 
     public OnSearchRequestedDelegate SearchRequest
